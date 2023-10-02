@@ -3,28 +3,24 @@
 ########################################################################
 
 # Compiler settings - Can be customized
-
-CXX			= c++
-CXXFLAGS	= -Wall -Werror -Wextra -std=c++98 -g -fsanitize=address
-INCLUDES	= -I ./src/include
-LDFLAGS		=
+CXX      = c++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+INCLUDE  = -I ./src/include
+LDFLAGS  =
 
 # Makefile settings - Can be customized
+NAME   = ircserv
+SRCDIR = src
+OBJDIR = obj
+DEPDIR = dep
 
-NAME		= ircserv
-
-SRCDIR		= src # source    files - *.cpp
-OBJDIR		= obj # object    files - *.o
-DEPDIR		= dep # dependecy files - *.d
-
-SRC			= $(wildcard $(SRCDIR)/*.cpp)
-OBJ			= $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-DEP			= $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
 
 # UNIX-based OS variables & settings
-
-RM			= rm -rf
-DELOBJ		= $(OBJ)
+RM     = rm -rf
+DELOBJ = $(OBJ)
 
 ########################################################################
 ####################### Targets beginning here #########################
@@ -33,22 +29,22 @@ DELOBJ		= $(OBJ)
 .PHONY: all
 all: $(NAME)
 
-# Bilds the app
+# Builds the app
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^ $(LDFLAGS)
 
 # Creates the dependecy rules
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p ./$(DEPDIR)
-	$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	$(CPP) $(CFLAGS) $(INCLUDE) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Includes all *.h/hpp files
 -include $(DEP)
 
-# Building rule for .o files and its *.c/cpp in combination with all *.h/hpp
-$(OBJDIR)/.%o: $(SRCDIR)/%.cpp Makefile
+# Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	@mkdir -p ./$(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
 
 ################### Cleaning rules for Unix-based OS ###################
 
@@ -87,4 +83,3 @@ valgrind: all
 .PHONY: valgrind_clean
 valgrind_clean: fclean
 	$(RM) $(LOGFILE)
-
