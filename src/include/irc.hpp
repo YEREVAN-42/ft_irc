@@ -15,4 +15,6 @@
 # include <stdlib.h> // EXIT_FAILURE
 # include <iostream>
 
-#endif //	IRC_HPP
+# include "Utils.hpp"
+
+#endif // __IRC_HPP__

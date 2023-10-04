@@ -21,4 +21,4 @@ const std::string BOLDWHITE   = "\033[1m\033[37m"; // Bold White
 const std::string BOLDYELLOW  = "\033[1m\033[33m"; // Bold Yellow
 const std::string BOLDMAGENTA = "\033[1m\033[35m"; // Bold Magenta
 
-#endif
+#endif // __COLORS_HPP__
