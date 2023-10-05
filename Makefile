@@ -22,7 +22,12 @@ DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
 RM     = rm -rf
 DELOBJ = $(OBJ)
 
-########################################################################
+# Windows OS variables & settings
+DEL = del
+EXE = .exe
+WDELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
+
+-########################################################################
 ####################### Targets beginning here #########################
 ########################################################################
 
@@ -60,6 +65,20 @@ fclean: clean
 .PHONY: re
 re: fclean all
 
+#################### Cleaning rules for Windows OS #####################
+
+# Cleans complete project
+.PHONY: cleanw
+cleanw:
+	$(DEL) $(WDELOBJ) $(DEP) $(DEP) $(EXE)
+
+.PHONY: fcleanw
+fcleanw:
+	$(DEL) $(NAME)
+
+.PHONY: rew
+rew: fcleanw all
+
 ########################################################################
 ######################## Building with valgrind ########################
 ########################################################################
@@ -83,3 +102,4 @@ valgrind: all
 .PHONY: valgrind_clean
 valgrind_clean: fclean
 	$(RM) $(LOGFILE)
+
