@@ -10,7 +10,7 @@ namespace irc
 	class Message
 	{
 		public:
-			// Message();
+			Message();
 			Message(const std::string&);
 			~Message();
 
@@ -26,6 +26,7 @@ namespace irc
 
 		public:
 			Message& operator<<(const std::string&);
+
 		private:
 			Message(const Message&);
 
@@ -35,7 +36,8 @@ namespace irc
 			std::string              _command;
 			std::vector<std::string> _params;
 	};
+
+	// std::ostream& operator<<(std::ostream&, const Message&);
 }
 
 #endif // __MESSAGE_HPP__
-

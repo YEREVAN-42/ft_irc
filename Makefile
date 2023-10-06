@@ -41,7 +41,7 @@ $(NAME): $(OBJ)
 # Creates the dependecy rules
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p ./$(DEPDIR)
-	$(CPP) $(CFLAGS) $(INCLUDE) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	@$(CPP) $(CFLAGS) $(INCLUDE) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Includes all *.h/hpp files
 -include $(DEP)

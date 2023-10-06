@@ -1,5 +1,6 @@
 #include "irc.hpp"
 #include "Colors.hpp"
+#include "Message.hpp"
 // #include "Server.hpp"
 
 void ValidInput(int argNum, const char* argVal[])
