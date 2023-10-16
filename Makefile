@@ -5,7 +5,6 @@
 # Compiler settings - Can be customized
 CXX      = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
-INCLUDE  = -I ./src/include
 LDFLAGS  =
 
 # Makefile settings - Can be customized
@@ -36,12 +35,12 @@ all: $(NAME)
 
 # Builds the app
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Creates the dependecy rules
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p ./$(DEPDIR)
-	@$(CPP) $(CFLAGS) $(INCLUDE) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Includes all *.h/hpp files
 -include $(DEP)
@@ -49,7 +48,7 @@ $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 # Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	@mkdir -p ./$(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 ################### Cleaning rules for Unix-based OS ###################
 

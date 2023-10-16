@@ -1,7 +1,4 @@
-#include "irc.hpp"
-#include "Colors.hpp"
-#include "Message.hpp"
-// #include "Server.hpp"
+#include "include/irc.hpp"
 
 void ValidInput(int argNum, const char* argVal[])
 {
@@ -32,6 +29,11 @@ void ValidInput(int argNum, const char* argVal[])
 int main(int arg, const char* argv[])
 {
 	ValidInput(arg, argv);
+
+	// irc::Server server(argv[2], std::atoi(argv[1]));
+
+	std::cout << BOLDGREEN << "Server are creating." << RESET << std::endl;
+
 
 	return 0;
 }

@@ -7,14 +7,20 @@
 # include <arpa/inet.h> // close
 
 # include <map>
+# include <vector>
+# include <string>
+
 # include <cerrno>
+# include <cstdio>
+# include <cstdlib> // EXIT_FAILURE
 # include <fcntl.h>
-# include <stdio.h>
 # include <cstring>
 # include <unistd.h>
-# include <stdlib.h> // EXIT_FAILURE
+
 # include <iostream>
 
-# include "Utils.hpp"
+# include "Utils/CommonValue.hpp"
+# include "Utils/Messages.hpp"
+# include "Color/Colors.hpp"
 
 #endif // __IRC_HPP__
