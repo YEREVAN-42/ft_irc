@@ -13,7 +13,7 @@ SRCDIR = src
 OBJDIR = obj
 DEPDIR = dep
 
-SRC = $(wildcard $(SRCDIR)/*.cpp)
+SRC = $(wildcard $(SRCDIR)/*.cpp $(SRCDIR)/*/*.cpp)
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
 
@@ -40,6 +40,7 @@ $(NAME): $(OBJ)
 # Creates the dependecy rules
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p ./$(DEPDIR)
+	@mkdir -p ./$(DEPDIR)/Utils
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Includes all *.h/hpp files
@@ -48,6 +49,7 @@ $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 # Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	@mkdir -p ./$(OBJDIR)
+	@mkdir -p ./$(OBJDIR)/Utils
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 ################### Cleaning rules for Unix-based OS ###################
