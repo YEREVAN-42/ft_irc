@@ -19,12 +19,13 @@ DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
 
 # UNIX-based OS variables & settings
 RM     = rm -rf
-DELOBJ = $(OBJ)
 
-# Windows OS variables & settings
-DEL = del
-EXE = .exe
-WDELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
+# Check if OBJDIR exists before including dependencies
+# ifeq ($(wildcard $(OBJDIR)),)
+# GENERATE_DEPS =
+# else
+# GENERATE_DEPS = -include $(DEP)
+# endif
 
 ########################################################################
 ####################### Targets beginning here #########################
@@ -37,19 +38,24 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Creates the dependecy rules
+# Creates the dependency rules only if OBJDIR exists
+# $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
+# 	@if [ -d $(OBJDIR) ]; then \
+# 		mkdir -p $(@D); \
+# 		$(CXX) $(CXXFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@; \
+# 	fi
+
+# Creates the dependency rules
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
-	@mkdir -p ./$(DEPDIR)
-	@mkdir -p ./$(DEPDIR)/utils
-	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	@mkdir -p $(@D)
+	$(CXX) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Includes all *.h/hpp files
 -include $(DEP)
 
 # Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
-	@mkdir -p ./$(OBJDIR)
-	@mkdir -p ./$(OBJDIR)/utils
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 ################### Cleaning rules for Unix-based OS ###################
@@ -57,28 +63,15 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 # Cleans complete project
 .PHONY: clean
 clean:
-	$(RM) $(DELOBJ) $(DEP) $(DEPDIR) $(OBJDIR)
+	$(RM) $(OBJDIR) $(DEPDIR)
 
 .PHONY: fclean
 fclean: clean
 	$(RM) $(NAME)
 
 .PHONY: re
-re: fclean all
-
-#################### Cleaning rules for Windows OS #####################
-
-# Cleans complete project
-.PHONY: cleanw
-cleanw:
-	$(DEL) $(WDELOBJ) $(DEP) $(DEP) $(EXE)
-
-.PHONY: fcleanw
-fcleanw:
-	$(DEL) $(NAME)
-
-.PHONY: rew
-rew: fcleanw all
+re: fclean
+	$(MAKE)
 
 ########################################################################
 ######################## Building with valgrind ########################
