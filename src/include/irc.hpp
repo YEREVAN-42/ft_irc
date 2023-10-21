@@ -10,6 +10,7 @@
 # include <vector>
 # include <string>
 
+# include <ctime> // for Log function in line 122 
 # include <cerrno>
 # include <cstdio>
 # include <cstdlib> // EXIT_FAILURE
@@ -19,9 +20,9 @@
 
 # include <iostream>
 
-# include "Utils/CommonValue.hpp"
-# include "Utils/Messages.hpp"
-# include "Color/Colors.hpp"
+# include "utils/CommonValue.hpp"
+# include "utils/Messages.hpp"
+# include "color/Colors.hpp"
 
 namespace irc
 {
@@ -29,91 +30,91 @@ namespace irc
 
     /* Error Responses */
 
-    inline const char*  ERR_NOTREGISTERED(const char* source)
-    { return "451 " + source + " :You have not registered"; }
+    inline const std::string  ERR_NOTREGISTERED(const std::string& source)
+    { return std::string("451 " + source + " :You have not registered"); }
 
-    inline const char*  ERR_ALREADYREGISTERED(const char* source)
-    { return "462 " + source + " :You may not register"; }
+    inline const std::string  ERR_ALREADYREGISTERED(const std::string& source)
+    { return std::string("462 " + source + " :You may not register"); }
 
-    inline const char*  ERR_PASSWDMISMATCH(const char* source)
-    { return "464 " + source + " :Password is incorrect"; }
+    inline const std::string  ERR_PASSWDMISMATCH(const std::string& source)
+    { return std::string("464 " + source + " :Password is incorrect"); }
  
-    inline const char*  ERR_NONICKNAMEGIVEN(const char* source)
-    { return "431 " + source + " :Nickname not given"; }
+    inline const std::string  ERR_NONICKNAMEGIVEN(const std::string& source)
+    { return std::string("431 " + source + " :Nickname not given"); }
 
-    inline const char*  ERR_NICKNAMEINUSE(const char* source)
-    { return "433 " + source + " " + source  + " :Nickname is already in use"; }
+    inline const std::string  ERR_NICKNAMEINUSE(const std::string& source)
+    { return std::string("433 " + source + " " + source  + " :Nickname is already in use"); }
 
-    inline const char*  ERR_UNKNOWNCOMMAND(const char* source, const char* command)
-    { return "421 " + source + " " + command + " :Unknown command"; }
+    inline const std::string  ERR_UNKNOWNCOMMAND(const std::string& source, const std::string& command)
+    { return std::string("421 " + source + " " + command + " :Unknown command"); }
 
-    inline const char*  ERR_NEEDMOREPARAMS(const char* source, const char* command)
-    { return "461 " + source + " " + command + " :Not enough parameters"; }
+    inline const std::string  ERR_NEEDMOREPARAMS(const std::string& source, const std::string& command)
+    { return std::string("461 " + source + " " + command + " :Not enough parameters"); }
 
-    inline const char*  ERR_TOOMANYCHANNELS(const char* source, const char* channel)
-    { return "405 " + source + " " + channel + " :You have joined too many channels"; }
+    inline const std::string  ERR_TOOMANYCHANNELS(const std::string& source, const std::string& channel)
+    { return std::string("405 " + source + " " + channel + " :You have joined too many channels"); }
 
-    inline const char*  ERR_NOTONCHANNEL(const char* source, const char* channel)
-    { return "442 " + source + " " + channel + " :You're not on that channel"; }
+    inline const std::string  ERR_NOTONCHANNEL(const std::string& source, const std::string& channel)
+    { return std::string("442 " + source + " " + channel + " :You're not on that channel"); }
 
-    inline const char*  ERR_NOSUCHCHANNEL(const char* source, const char* channel)
-    { return "403 " + source + " " + channel + " :No such channel"; }
+    inline const std::string  ERR_NOSUCHCHANNEL(const std::string& source, const std::string& channel)
+    { return std::string("403 " + source + " " + channel + " :No such channel"); }
 
-    inline const char*  ERR_BADCHANNELKEY(const char* source, const char* channel)
-    { return "475 " + source + " " + channel + " :Cannot join channel (+k)"; }
+    inline const std::string  ERR_BADCHANNELKEY(const std::string& source, const std::string& channel)
+    { return std::string("475 " + source + " " + channel + " :Cannot join channel (+k)"); }
 
-    inline const char*  ERR_CHANNELISFULL(const char* source, const char* channel)
-    { return "471 " + source + " " + channel + " :Cannot join channel (+l)"; }
+    inline const std::string  ERR_CHANNELISFULL(const std::string& source, const std::string& channel)
+    { return std::string("471 " + source + " " + channel + " :Cannot join channel (+l)"); }
 
-    inline const char*  ERR_CANNOTSENDTOCHAN(const char* source, const char* channel)
-    { return "404 " + source + " " + channel + " :Cannot send to channel"; }
+    inline const std::string  ERR_CANNOTSENDTOCHAN(const std::string& source, const std::string& channel)
+    { return std::string("404 " + source + " " + channel + " :Cannot send to channel"); }
 
-    inline const char*  ERR_CHANOPRIVSNEEDED(const char* source, const char* channel)
-    { return "482 " + source + " " + channel + " :You're not channel operator"; }
+    inline const std::string  ERR_CHANOPRIVSNEEDED(const std::string& source, const std::string& channel)
+    { return std::string("482 " + source + " " + channel + " :You're not channel operator"); }
 
 
-    inline const char*  ERR_NOSUCHNICK(const char* source, const char* nickname)
-    { return "401 " + source + " " + nickname + " :No such nick/channel"; }
+    inline const std::string  ERR_NOSUCHNICK(const std::string& source, const std::string& nickname)
+    { return std::string("401 " + source + " " + nickname + " :No such nick/channel"); }
 
-    inline const char*  ERR_USERNOTINCHANNEL(const char* source, const char* nickname, const char* channel)
-    { return "441 " + source + " " + nickname + " " + channel + " :They aren't on that channel"; }
+    inline const std::string  ERR_USERNOTINCHANNEL(const std::string& source, const std::string& nickname, const std::string& channel)
+    { return std::string("441 " + source + " " + nickname + " " + channel + " :They aren't on that channel"); }
 
     /* Numeric Responses */
 
-    inline const char*  RPL_WELCOME(const char* source)
-    { return "001 " + source + " :Welcome " + source + " to the ft_irc network"; }
+    inline const std::string  RPL_WELCOME(const std::string& source)
+    { return std::string("001 " + source + " :Welcome " + source + " to the ft_irc network"); }
 
-    inline const char*  RPL_NAMREPLY(const char* source, const char* channel, const char* users)
-    { return "353 " + source + " = " + channel + " :" + users; }
+    inline const std::string  RPL_NAMREPLY(const std::string& source, const std::string& channel, const std::string& users)
+    { return std::string("353 " + source + " = " + channel + " :" + users); }
 
-    inline const char*  RPL_ENDOFNAMES(const char* source, const char* channel)
-    { return "366 " + source + " " + channel + " :End of /NAMES list."; }
+    inline const std::string  RPL_ENDOFNAMES(const std::string& source, const std::string& channel)
+    { return std::string("366 " + source + " " + channel + " :End of /NAMES list."); }
 
     /* Command Responses */
 
-    inline const char*  RPL_JOIN(const char* source, const char* channel)
-    { return ":" + source + " JOIN :" + channel; }
+    inline const std::string  RPL_JOIN(const std::string& source, const std::string& channel)
+    { return std::string(":" + source + " JOIN :" + channel); }
 
-    inline const char*  RPL_PART(const char* source, const char* channel)
-    { return ":" + source + " PART :" + channel; }
+    inline const std::string  RPL_PART(const std::string& source, const std::string& channel)
+    { return std::string(":" + source + " PART :" + channel); }
 
-    inline const char*  RPL_PING(const char* source, const char* token)
-    { return ":" + source + " PONG :" + token; }
+    inline const std::string  RPL_PING(const std::string& source, const std::string& token)
+    { return std::string(":" + source + " PONG :" + token); }
 
-    inline const char*  RPL_PRIVMSG(const char* source, const char* target, const char* message)
-    { return ":" + source + " PRIVMSG " + target + " :" + message; }
+    inline const std::string  RPL_PRIVMSG(const std::string& source, const std::string& target, const std::string& message)
+    { return std::string(":" + source + " PRIVMSG " + target + " :" + message); }
 
-    inline const char*  RPL_NOTICE(const char* source, const char* target, const char* message)
-    { return ":" + source + " NOTICE " + target + " :" + message; }
+    inline const std::string  RPL_NOTICE(const std::string& source, const std::string& target, const std::string& message)
+    { return std::string(":" + source + " NOTICE " + target + " :" + message); }
 
-    inline const char*  RPL_QUIT(const char* source, const char* message)
-    { return ":" + source + " QUIT :Quit: " + message; }
+    inline const std::string  RPL_QUIT(const std::string& source, const std::string& message)
+    { return std::string(":" + source + " QUIT :Quit: " + message); }
 
-    inline const char*  RPL_KICK(const char* source, const char* channel, const char* target, const char* reason)
-    { return ":" + source + " KICK " + channel + " " + target + " :" + reason; }
+    inline const std::string  RPL_KICK(const std::string& source, const std::string& channel, const std::string& target, const std::string& reason)
+    { return std::string(":" + source + " KICK " + channel + " " + target + " :" + reason); }
 
-    inline const char*  RPL_MODE(const char* source, const char* channel, const char* modes, const char* args)
-    { return ":" + source + " MODE " + channel + " " + modes + " " + args; }
+    inline const std::string  RPL_MODE(const std::string& source, const std::string& channel, const std::string& modes, const std::string& args)
+    { return std::string(":" + source + " MODE " + channel + " " + modes + " " + args); }
 
 
     /* Log Response */

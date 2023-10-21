@@ -40,7 +40,7 @@ $(NAME): $(OBJ)
 # Creates the dependecy rules
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p ./$(DEPDIR)
-	@mkdir -p ./$(DEPDIR)/Utils
+	@mkdir -p ./$(DEPDIR)/utils
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Includes all *.h/hpp files
@@ -49,7 +49,7 @@ $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 # Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	@mkdir -p ./$(OBJDIR)
-	@mkdir -p ./$(OBJDIR)/Utils
+	@mkdir -p ./$(OBJDIR)/utils
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 ################### Cleaning rules for Unix-based OS ###################
