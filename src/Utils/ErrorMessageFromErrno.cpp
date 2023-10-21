@@ -1,10 +1,10 @@
 #include "../include/Utils/Messages.hpp"
 
-void irc::ErrorMessageFromErrno(const char* funcName, int errno)
+void	irc::ErrorMessageFromErrno(const char* funcName, int errno)
 {
 	if (funcName != NULL)
 	{
-		std::cout
+		std::cerr
 				<< BOLDRED
 				<< "ERROR: in this function "
 				<< funcName
@@ -12,7 +12,7 @@ void irc::ErrorMessageFromErrno(const char* funcName, int errno)
 				<< std::endl;
 	}
 
-	std::cout
+	std::cerr
 			<< BOLDYELLOW
 			<< "ERROR TYPE:\n"
 			<< std::strerror(errno)
