@@ -1,13 +1,10 @@
-#include "irc.hpp"
-#include "Colors.hpp"
-#include "Message.hpp"
-// #include "Server.hpp"
+#include "include/irc.hpp"
 
 void ValidInput(int argNum, const char* argVal[])
 {
 	if (argNum != 3)
 	{
-		ErrorMessage("Wrong number of arguments!!!",
+		irc::ErrorMessage("Wrong number of arguments!!!",
 				"Try again like:\t ./ircserv <port> <password>" );
 		exit(EXIT_FAILURE);
 	}
@@ -15,7 +12,7 @@ void ValidInput(int argNum, const char* argVal[])
 	if (std::string(argVal[1]).find_first_not_of("0123456789")
 				!= std::string::npos)
 	{
-		ErrorMessage("Invalid input for <port>!!!", "Try again:");
+		irc::ErrorMessage("Invalid input for <port>!!!", "Try again:");
 		exit(EXIT_FAILURE);
 	}
 
@@ -23,7 +20,7 @@ void ValidInput(int argNum, const char* argVal[])
 
 	if (port > 65535)
 	{
-		ErrorMessage("Wrong PORT specified!!!", "Please input a valid PORT.\n"\
+		irc::ErrorMessage("Wrong PORT specified!!!", "Please input a valid PORT.\n"\
 				"It must be a number in the range [0, 65535].");
 		exit(EXIT_FAILURE);
 	}
@@ -32,6 +29,11 @@ void ValidInput(int argNum, const char* argVal[])
 int main(int arg, const char* argv[])
 {
 	ValidInput(arg, argv);
+
+	// irc::Server server(argv[2], std::atoi(argv[1]));
+
+	std::cout << BOLDGREEN << "Server are creating." << RESET << std::endl;
+
 
 	return 0;
 }

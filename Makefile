@@ -5,7 +5,6 @@
 # Compiler settings - Can be customized
 CXX      = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
-INCLUDE  = -I ./src/include
 LDFLAGS  =
 
 # Makefile settings - Can be customized
@@ -14,7 +13,7 @@ SRCDIR = src
 OBJDIR = obj
 DEPDIR = dep
 
-SRC = $(wildcard $(SRCDIR)/*.cpp)
+SRC = $(wildcard $(SRCDIR)/*.cpp $(SRCDIR)/*/*.cpp)
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
 
@@ -36,12 +35,13 @@ all: $(NAME)
 
 # Builds the app
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Creates the dependecy rules
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p ./$(DEPDIR)
-	@$(CPP) $(CFLAGS) $(INCLUDE) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	@mkdir -p ./$(DEPDIR)/Utils
+	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Includes all *.h/hpp files
 -include $(DEP)
@@ -49,7 +49,8 @@ $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 # Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	@mkdir -p ./$(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+	@mkdir -p ./$(OBJDIR)/Utils
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 ################### Cleaning rules for Unix-based OS ###################
 

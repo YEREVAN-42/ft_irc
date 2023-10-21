@@ -1,6 +1,6 @@
-#include "Utils.hpp"
+#include "../include/Utils/Messages.hpp"
 
-void ErrorMessage(const char* errorType, const char* message)
+void irc::ErrorMessage(const char* errorType, const char* message)
 {
 	if (errorType != NULL)
 	{
