@@ -9,7 +9,9 @@ namespace irc
 			Command();
 			~Command();
 		protected:
-			/* data */
+			Server* _server
+
+		 virtual void execute(User* user, std::vector<std::string> args) = 0;
 	};
 }
 
