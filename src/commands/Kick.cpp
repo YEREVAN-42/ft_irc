@@ -12,7 +12,7 @@ irc::Kick::~Kick(){}
  *
  * @param   <channel> *( "," <channel> ) <user> *( "," <user> )
                [<comment>]
- * @return   no
+ * @return   nothing
  */
 irc::Kick::execute(User* user, std::vector<std::string> args)
 {

@@ -11,7 +11,7 @@ irc::Join::~Join(){}
  *
  * @param   <channel> *( "," <channel> ) <user> *( "," <user> )
                [<comment>]
- * @return   no
+ * @return   nothing
  */
 
 void    Join::execute(User* user, std::vector<std::string> args)
