@@ -16,14 +16,12 @@ NAME   = ircserv
 SRCDIR = $(shell find src -type d)
 INCDIR = $(shell find include -type d)
 OBJDIR = bin/obj
-DEPDIR = bin/dep
 
 vpath %.cpp $(foreach dir, $(SRCDIR), $(dir):)
 
 
 SRC := $(foreach dir, $(SRCDIR), $(foreach file, $(wildcard $(dir)/*.cpp), $(notdir $(file))))
 OBJ := $(addprefix $(OBJDIR)/, $(SRC:%.cpp=%.o))
-DEP := $(addprefix $(DEPDIR)/, $(OBJ:%.o=%.d))
 
 IFLAGS =	$(foreach dir, $(INCDIR), -I $(dir))
 
@@ -40,14 +38,9 @@ RM = rm -rf
 # Builds the app
 $(NAME): $(OBJ)
 	@echo "-----\nCreating Binary File $(_YELLOW)$@$(_WHITE) ... \c"
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	@$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 	@mv ircserv bin
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
-
-# Creates the dependency rules
-$(DEPDIR)/%.d: $(SRCDIR)/%.cpp
-	@mkdir -p $(DEPDIR)
-	@$(CXX) $(CXXFLAGS) $(IFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
 $(OBJDIR)/%.o:%.cpp Makefile
@@ -59,8 +52,6 @@ $(OBJDIR)/%.o:%.cpp Makefile
 .PHONY: all
 all: $(NAME)
 
-# Includes all *.h/hpp files
--include $(DEP)
 
 ##################### Cleaning rules for Unix-based OS ########################
 
