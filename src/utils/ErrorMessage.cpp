@@ -1,4 +1,4 @@
-#include "../include/utils/Messages.hpp"
+#include "Messages.hpp"
 
 void	irc::ErrorMessage(const char* errorType, const char* message)
 {

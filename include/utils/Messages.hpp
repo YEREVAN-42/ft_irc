@@ -4,7 +4,7 @@
 # include <cstring>
 # include <iostream>
 
-# include "../color/Colors.hpp"
+# include "Colors.hpp"
 
 namespace irc
 {

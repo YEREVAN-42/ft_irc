@@ -1,4 +1,4 @@
-#include "../include/utils/Messages.hpp"
+#include "Messages.hpp"
 
 void	irc::ErrorMessageFromErrno(const char* funcName, int errno)
 {

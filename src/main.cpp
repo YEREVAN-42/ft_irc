@@ -1,4 +1,4 @@
-#include "include/irc.hpp"
+#include "irc.hpp"
 
 void ValidInput(int argNum, const char* argVal[])
 {

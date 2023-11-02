@@ -1,81 +1,102 @@
-########################################################################
-####################### Makefile Template ##############################
-########################################################################
+###############################################################################
+############################ Makefile Template ################################
+###############################################################################
 
 # Compiler settings - Can be customized
 CXX      = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
-LDFLAGS  =
+
+#INCLUDES := $(shell find include -maxdepth 4 -name *.hpp)
+#SRC := $(shell find $(SRCDIR) -maxdepth 4 -name *.cpp)
+
+CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+LDFLAGS  :=
 
 # Makefile settings - Can be customized
 NAME   = ircserv
-SRCDIR = src
-OBJDIR = obj
-DEPDIR = dep
+SRCDIR = $(shell find src -type d)
+INCDIR = $(shell find include -type d)
+OBJDIR = bin/obj
+DEPDIR = bin/dep
 
-SRC = $(wildcard $(SRCDIR)/*.cpp $(SRCDIR)/*/*.cpp)
-OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+vpath %.cpp $(foreach dir, $(SRCDIR), $(dir):)
+
+
+SRC := $(foreach dir, $(SRCDIR), $(foreach file, $(wildcard $(dir)/*.cpp), $(notdir $(file))))
+OBJ := $(addprefix $(OBJDIR)/, $(SRC:%.cpp=%.o))
+DEP := $(addprefix $(DEPDIR)/, $(OBJ:%.o=%.d))
+
+IFLAGS =	$(foreach dir, $(INCDIR), -I $(dir))
+
 
 # UNIX-based OS variables & settings
-RM     = rm -rf
+RM = rm -rf
 
-# Check if OBJDIR exists before including dependencies
-# ifeq ($(wildcard $(OBJDIR)),)
-# GENERATE_DEPS =
-# else
-# GENERATE_DEPS = -include $(DEP)
-# endif
+###############################################################################
+########################### Targets beginning here ############################
+###############################################################################
 
-########################################################################
-####################### Targets beginning here #########################
-########################################################################
+.DEFAULT_GOAL = all
+
+# Builds the app
+$(NAME): $(OBJ)
+	@echo "-----\nCreating Binary File $(_YELLOW)$@$(_WHITE) ... \c"
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	@mv ircserv bin
+	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
+
+# Creates the dependency rules
+$(DEPDIR)/%.d: $(SRCDIR)/%.cpp
+	@mkdir -p $(DEPDIR)
+	@$(CXX) $(CXXFLAGS) $(IFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+
+# Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
+$(OBJDIR)/%.o:%.cpp Makefile
+	@echo "Compiling $(_YELLOW)$@$(_WHITE) ... \c"
+	@mkdir -p $(OBJDIR)
+	@$(CXX) $(CXXFLAGS) $(IFLAGS) -o $@ -c $<
+	@echo "$(_GREEN)DONE$(_WHITE)"
 
 .PHONY: all
 all: $(NAME)
 
-# Builds the app
-$(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-
-# Creates the dependency rules only if OBJDIR exists
-# $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
-# 	@if [ -d $(OBJDIR) ]; then \
-# 		mkdir -p $(@D); \
-# 		$(CXX) $(CXXFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@; \
-# 	fi
-
-# Creates the dependency rules
-$(DEPDIR)/%.d: $(SRCDIR)/%.cpp
-	@mkdir -p $(@D)
-	$(CXX) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
-
 # Includes all *.h/hpp files
 -include $(DEP)
 
-# Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
-	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
-
-################### Cleaning rules for Unix-based OS ###################
+##################### Cleaning rules for Unix-based OS ########################
 
 # Cleans complete project
 .PHONY: clean
 clean:
-	$(RM) $(OBJDIR) $(DEPDIR)
+	@echo "$(_WHITE)Deleting Objects Directory $(_YELLOW)$(OBJ_DIR)$(_WHITE) ... \c"
+	@$(foreach file, $(OBJ), $(RM) $(file))
+	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 .PHONY: fclean
 fclean: clean
-	$(RM) $(NAME)
+	@echo "Deleting Binary File $(_YELLOW)$(NAME)$(_WHITE) ... \c"
+	@$(RM) bin/
+	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 .PHONY: re
-re: fclean
-	$(MAKE)
+re: fclean all
+#	$(MAKE)
 
-########################################################################
-######################## Building with valgrind ########################
-########################################################################
+
+# Show macro details
+show:
+	@echo "$(_BLUE)SRC :\n$(_YELLOW)$(SRC)$(_WHITE)"
+	@echo "$(_BLUE)OBJ :\n$(_YELLOW)$(OBJ)$(_WHITE)"
+	@echo "$(_BLUE)DEP :\n$(_YELLOW)$(OBJ)$(_WHITE)"
+	@echo "$(_BLUE)CXXFLAGS :\n$(_YELLOW)$(CFLAGS)$(_WHITE)"
+	@echo "$(_BLUE)IFLAGS :\n$(_YELLOW)$(IFLAGS)$(_WHITE)"
+	@echo "\n-----\n"
+	@echo "$(_BLUE)Compiling : \n$(_YELLOW)$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(_WHITE)"
+
+
+
+###############################################################################
+########################### Building with valgrind ############################
+###############################################################################
 
 LOGFILE	 = valgrind-out.txt
 
@@ -91,9 +112,32 @@ valgrind: all
          --log-file=$(LOGFILE) \
          ./$(NAME)
 
-######################## Cleaning with valgrind ########################
+############################ Cleaning with valgrind ###########################
 
 .PHONY: valgrind_clean
 valgrind_clean: fclean
 	$(RM) $(LOGFILE)
 
+
+# #############################################################################
+#
+# Makefile misc
+#
+# #############################################################################
+
+# Colors
+_GREY=	\033[1;30m
+_RED=	\033[1;31m
+_GREEN=	\033[1;32m
+_YELLOW=\033[1;33m
+_BLUE=	\033[1;34m
+_PURPLE=\033[1;35m
+_CYAN=	\033[1;36m
+_WHITE=	\033[1;37m
+_NC=	\033[0m
+
+# Colored messages
+SUCCESS=$(GREEN)SUCCESS$(NC)
+COMPILING=$(_BLUE)COMPILING$(NC)
+
+# #############################################################################

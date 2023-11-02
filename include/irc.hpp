@@ -1,10 +1,11 @@
 #ifndef  __IRC_HPP__
 # define __IRC_HPP__
 
-# include <netinet/in.h>
-# include <sys/socket.h>
+# include <sys/poll.h>
 # include <sys/types.h>
 # include <arpa/inet.h> // close
+# include <netinet/in.h>
+# include <sys/socket.h>
 
 # include <map>
 # include <vector>
@@ -20,9 +21,9 @@
 
 # include <iostream>
 
-# include "utils/CommonValue.hpp"
-# include "utils/Messages.hpp"
-# include "color/Colors.hpp"
+# include "CommonValue.hpp"
+# include "Messages.hpp"
+# include "Colors.hpp"
 
 namespace irc
 {
@@ -119,7 +120,7 @@ namespace irc
 
     /* Log Response */
 
-    static inline void  Log(const std::string& message) 
+    inline void  Log(const std::string& message) 
     {
         char        buffer[80];
         time_t      rawtime;
@@ -132,7 +133,7 @@ namespace irc
         std::string str(buffer);
 
         std::cout << BOLDBLUE << str << RESET;
-        std::cout << message << std::endl;
+        std::cout << BOLDGREEN << message << RESET << std::endl;
     }
 
 }
