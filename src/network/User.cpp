@@ -8,7 +8,7 @@ irc::User::User(int fd, int port, const std::string& host)
 int	irc::User::getFd()   const { return _fd; }
 int	irc::User::getPort() const { return _port; }
 
-const UserState&	irc::User::getState() const { return _state; }
+const irc::User::UserState&	irc::User::getState() const { return _state; }
 
 const std::string&	irc::User::getUserName() const { return _userName; }
 const std::string&	irc::User::getNickName() const { return _nickName; }
@@ -22,7 +22,7 @@ const std::string&	irc::User::getPrefix()   const
 	return _nickName + userName + hostName;
 }
 
-const Channel*	irc::User::getChannel() const { return _channel; }
+const irc::Channel*	irc::User::getChannel() const { return _channel; }
 
 bool	irc::User::isRegistered() const { _state == UserState::REGISTERED; }
 
