@@ -1,10 +1,10 @@
-#include "../include/Utils/Messages.hpp"
+#include "Messages.hpp"
 
-void irc::ErrorMessage(const char* errorType, const char* message)
+void	irc::ErrorMessage(const char* errorType, const char* message)
 {
 	if (errorType != NULL)
 	{
-		std::cout
+		std::cerr
 				<< BOLDRED
 				<< errorType 
 				<< RESET
@@ -13,7 +13,7 @@ void irc::ErrorMessage(const char* errorType, const char* message)
 
 	if (message != NULL)
 	{
-		std::cout
+		std::cerr
 				<< BOLDYELLOW
 				<< message
 				<< RESET
