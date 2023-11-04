@@ -18,15 +18,21 @@ namespace irc
 			~Channel();
             void    addUser(User*);
             void    removeUser(User*);
+            void    kick(User*, User*, const std::string&);
+            void    broadcast(const std::string&);
             void    broadcast(const std::string&, const std::string&);
+
+            void    setKey(const std::string&);
+            void    setLimit(size_t);
+            void    setExtMsg(bool);
 
             const std::string&          getName() const;
             User*                       getAdmin() const;
             const std::string&          getKey() const;
             size_t                      getLimit() const;
+            bool                        getExtMsg() const;
+            size_t                      getSize() const;
             std::vector<std::string>    getNickNames();
-            void                        setKey(const std::string&);
-            void                        setLimit(size_t);
 
         private:
             std::string         _name;
@@ -34,6 +40,7 @@ namespace irc
             std::vector<User *> _userVector;
             std::string         _key;
             size_t              _limitMember;
+            bool                _flag;       // yes/no for external messages
     }; 
 }
 
