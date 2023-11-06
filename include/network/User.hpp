@@ -30,7 +30,7 @@ namespace irc
 			const std::string&	getNickName() const;
 			const std::string&	getRealName() const;
 			const std::string&	getHostName() const;
-			const std::string&	getPrefix()   const;
+			const std::string	getPrefix()   const;
 
 			const Channel*	getChannel() const;
 
@@ -52,7 +52,7 @@ namespace irc
 			/* Send/Recieve Actions */
 			void	write(const std::string& message) const;
 			void	reply(const std::string& reply)   const;
-			void	welcome() const;
+			void	welcome();
 
 			/* Client Actions */
 			void	join(Channel* channel);

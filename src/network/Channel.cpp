@@ -1,6 +1,8 @@
 #include "Channel.hpp"
 
-irc::Channel::Channel(const std::string &n, const std::string &k, User* a) : _name(n), _key(k), _admin(a) {}
+irc::Channel::Channel(const std::string &n, const std::string &k, User* a)
+: _name(n), _key(k), _admin(a)
+{	}
 
 irc::Channel::~Channel(){}
 

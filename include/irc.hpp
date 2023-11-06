@@ -1,11 +1,13 @@
 #ifndef  __IRC_HPP__
 # define __IRC_HPP__
 
-# include <sys/poll.h>
-# include <sys/types.h>
-# include <arpa/inet.h> // close
 # include <netinet/in.h>
 # include <sys/socket.h>
+# include <sys/types.h>
+# include <arpa/inet.h> // close
+# include <sys/poll.h>
+# include <netdb.h>
+# include <poll.h>
 
 # include <map>
 # include <vector>
@@ -20,14 +22,19 @@
 # include <unistd.h>
 
 # include <iostream>
+# include <stdexcept>
+# include <algorithm>
 
-# include "CommonValue.hpp"
 # include "Messages.hpp"
 # include "Colors.hpp"
 
 namespace irc
 {
-    // irc server Response
+	// Literal Definition Value
+	const char CR = '\r';
+	const char LF = '\n';
+    
+	// irc server Response
 
     /* Error Responses */
 

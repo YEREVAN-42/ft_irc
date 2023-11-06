@@ -77,7 +77,6 @@ re: fclean all
 show:
 	@echo "$(_BLUE)SRC :\n$(_YELLOW)$(SRC)$(_WHITE)"
 	@echo "$(_BLUE)OBJ :\n$(_YELLOW)$(OBJ)$(_WHITE)"
-	@echo "$(_BLUE)DEP :\n$(_YELLOW)$(OBJ)$(_WHITE)"
 	@echo "$(_BLUE)CXXFLAGS :\n$(_YELLOW)$(CFLAGS)$(_WHITE)"
 	@echo "$(_BLUE)IFLAGS :\n$(_YELLOW)$(IFLAGS)$(_WHITE)"
 	@echo "\n-----\n"
