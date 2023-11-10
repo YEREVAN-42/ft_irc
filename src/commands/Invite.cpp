@@ -16,29 +16,29 @@ void	irc::Invite::execute(User* user, std::vector<std::string> args)
 {
 	if (args.empty())
     {
-        user->/*inchvoranun*/(ERR_NEEDMOREPARAMS(user->/* getNickname() */, "INVITE"));
+        user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "INVITE"));
         return;
     }
 
 	std::string user_name = args[0];
 	std::string channel_name = args[1];
 	
-	Channel *channel = user->/* getChannel() */;
-	if (!channel || channel->/* getName() */ != channel_name)
+	Channel *channel = user->getChannel();
+	if (!channel || channel->getName() != channel_name)
     {
-        user->/* reply */(ERR_NOTONCHANNEL(user->/* getNickname() */, channel_name));
+        user->reply(ERR_NOTONCHANNEL(user->getNickName(), channel_name));
         return;
     }
-	if (channel->/* get_admin() */ != user_name)
+	if (channel->getAdmin() != user_name)
     {
-        user->/* reply */(ERR_CHANOPRIVSNEEDED(user->/* get_nickname() */, channel_name));
+        user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
         return;
     }
 
-	User *dest = _server->/* get_client */(user_name);
+	User *dest = _server->getClient(user_name);
     if (!dest)
     {
-        user->/* reply */(ERR_NOSUCHNICK(user->/* get_nickname() */, user_name));
+        user->reply(ERR_NOSUCHNICK(user->getNickName(), user_name));
         return;
     }
 

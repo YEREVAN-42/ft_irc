@@ -14,11 +14,11 @@ irc::Join::~Join(){}
  * @return   nothing
  */
 
-void    Join::execute(User* user, std::vector<std::string> args)
+void    irc::Join::execute(User* user, std::vector<std::string> args)
 {
     if (args.empty())
     {
-        user->/*inchvoranun*/(ERR_NEEDMOREPARAMS(user->/* getNickname() */, "JOIN"));
+        user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "JOIN"));
         return;
     }
 
@@ -29,28 +29,28 @@ void    Join::execute(User* user, std::vector<std::string> args)
 	else
 		pass = "";
 
-    Channel *channel = user->/* getChannel */;
+    Channel *channel = user->getChannel;
 	if (channel) 
     {
-		user->/*inchvoranun*/(ERR_TOOMANYCHANNELS(user->/* getNickname() */, user_name));
+		user->reply(ERR_TOOMANYCHANNELS(user->getNickName(), user_name));
 		return;
 	}
 
-    channel = server->/* getChannel(user_name) */;
+    channel = server->getChannel(user_name);
 	if (!channel)
-		channel = server->/* create_channel(user_name, pass, user) */;
+		channel = server->createChannel(user_name, pass, user);
 
-    if (channel->/* getLimit */ > 0 && channel->/* getSize() */ >= channel->/* getLimit */)
+    if (channel->getLimit() > 0 && channel->getSize() >= channel->getLimit())
     {
-		user->/*inchvoranun*/(ERR_CHANNELISFULL(user->/* getNickname() */, user_name));
+		user->reply(ERR_CHANNELISFULL(user->getNickName(), user_name));
 		return;
 	}
 
-    if (channel->get_key() != pass) 
+    if (channel->get_key() != pass)
     {
-		user->/*inchvoranun*/(ERR_BADCHANNELKEY(user->/* getNickname() */, user_name));
+		user->reply(ERR_BADCHANNELKEY(user->getNickName(), user_name));
 		return;
 	}
 
-	user->/* join(channel) */;
+	user->join(channel);
 }

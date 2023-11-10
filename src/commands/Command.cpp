@@ -1,5 +1,5 @@
 #include "Command.hpp"
 
-Command::Command(){}
-Command::~Command(){}
+irc::Command::Command(){}
+irc::Command::~Command(){}
 

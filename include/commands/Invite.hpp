@@ -1,6 +1,10 @@
 #ifndef __INVITE_HPP__
 # define __INVITE_HPP__
 
+#include "User.hpp"
+#include "Server.hpp"
+#include "Command.hpp"
+
 namespace irc
 {
 	class Invite : public Command
