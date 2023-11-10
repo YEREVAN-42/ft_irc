@@ -8,8 +8,8 @@
 
 namespace irc
 {
-	void ErrorMessage(const char* errType, const char* message);
-	void ErrorMessageFromErrno(const char* funcName, int errno);
+	void	ErrorMessage(const char* errType, const char* message);
+	void	ErrorMessageFromErrno(const char* funcName, const char* message, int erno);
 }
 
 #endif // __MESSAGES_HPP__

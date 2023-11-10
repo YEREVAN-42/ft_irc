@@ -76,3 +76,11 @@ const  irc::Channel*	irc::Server::getChannel(const std::string& name) const
 
 	return NULL; 
 }
+
+irc::Channel*	irc::Server::createChannel(const std::string& name, const std::string& key, User* admin)
+{
+	Channel*	channel = new Channel(name, key, admin);
+	_channels.push_back(channel);
+
+	return channel;
+}

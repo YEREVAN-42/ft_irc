@@ -1,6 +1,6 @@
 #include "Messages.hpp"
 
-void	irc::ErrorMessageFromErrno(const char* funcName, int errno)
+void	irc::ErrorMessageFromErrno(const char* funcName, const char* message, int erno)
 {
 	if (funcName != NULL)
 	{
@@ -12,11 +12,22 @@ void	irc::ErrorMessageFromErrno(const char* funcName, int errno)
 				<< std::endl;
 	}
 
+	if (message != NULL)
+	{
+		std::cerr
+				<< BOLDYELLOW
+				<< message
+				<< RESET
+				<< std::endl;
+	}
+
 	std::cerr
 			<< BOLDYELLOW
 			<< "ERROR TYPE:\n"
-			<< std::strerror(errno)
+			<< std::strerror(erno)
 			<< RESET
 			<< std::endl;
+
+	exit(EXIT_FAILURE);
 }
 

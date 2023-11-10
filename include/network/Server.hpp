@@ -44,7 +44,7 @@ namespace irc
 			std::string	readMessage(int);
 
         //	Create Channel
-			Channel*	createChannel(const std::string&, const std::string&, Client*);
+			Channel*	createChannel(const std::string&, const std::string&, User*);
 
         //	Create Socket
 			int	createSocket();
