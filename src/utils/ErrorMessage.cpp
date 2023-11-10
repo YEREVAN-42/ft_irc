@@ -19,4 +19,5 @@ void	irc::ErrorMessage(const char* errorType, const char* message)
 				<< RESET
 				<< std::endl;
 	}
+	exit(EXIT_FAILURE);
 }

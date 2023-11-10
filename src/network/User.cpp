@@ -14,7 +14,19 @@ const std::string&	irc::User::getUserName() const { return _userName; }
 const std::string&	irc::User::getNickName() const { return _nickName; }
 const std::string&	irc::User::getRealName() const { return _realName; }
 const std::string&	irc::User::getHostName() const { return _hostName; }
-const std::string&	irc::User::getPrefix()   const
+const irc::Channel*	irc::User::getChannel()  const { return _channel;  }
+
+bool				irc::User::isRegistered() const { return _state == REGISTERED; }
+
+/**
+ * @brief	By following the special irc-syntax,
+ * 			give the _nickName, _userName, _hostName
+ * 
+ * @param	nothing
+ * 
+ * @return	a string which represents the user
+ */
+const std::string	irc::User::getPrefix()   const
 {
 	std::string userName = _userName.empty() ? "" : "!" + _userName;
 	std::string hostName = _hostName.empty() ? "" : "@" + _hostName;
@@ -22,9 +34,7 @@ const std::string&	irc::User::getPrefix()   const
 	return _nickName + userName + hostName;
 }
 
-const irc::Channel*	irc::User::getChannel() const { return _channel; }
 
-bool	irc::User::isRegistered() const { _state == UserState::REGISTERED; }
 
 void	irc::User::setFd(int fd)     { _fd = fd; }
 void	irc::User::setPort(int port) { _port = port; }
@@ -37,39 +47,49 @@ void	irc::User::setNickName(const std::string& nickName) { _nickName = nickName;
 void	irc::User::setRealName(const std::string& realName) { _realName = realName; }
 void	irc::User::setHostName(const std::string& hostName) { _hostName = hostName; }
 
-	/**
-	 * 
-	 * @param 
-	 * 
-	 * @return nothing
-	 */
+/**
+ * @brief	By following the special irc-syntax,
+ * 			reply and this->getPrefix are sent this->write
+ * 
+ * @param	reply that will be sent to a user
+ * 
+ * @return	nothing
+ */
 void	irc::User::reply(const std::string& reply) const
 {
 	this->write(":" + this->getPrefix() + " " + reply);
 }
 
-	/**
-	 * 
-	 * @return nothing
-	 */
+/**
+ * @brief	By following the special irc-syntax,
+ * 			send the message to the user
+ * 
+ * @param	message that will be sent to a user
+ * 
+ * @return	nothing
+ */
 void	irc::User::write(const std::string& message) const
 {
-	std::string buffer = message + "\r\n";
+	std::string buffer = message + CR + LF;
 
-	if (send(_fd, buffer.c_str(), buffer.size(), 0) == ERR_RETURN)
+	if (send(_fd, buffer.c_str(), buffer.size(), 0) == -1)
 	{
 		throw std::runtime_error("Error while sending a message to a client(User)!");
 	}
 }
 
 /**
-	* 
-	* 
-	* @return nothing
-	*/
-void	irc::User::welcome() const
+ * @brief	changes user state,
+ * 			sends a welcome message to the user,
+ * 			and print when he connect the network
+ * 
+ * @param	nothing
+ * 
+ * @return	nothing
+ * */
+void	irc::User::welcome()
 {
-	if (_state != UserState::LOGIN)
+	if (_state != LOGIN)
 	{
 		ErrorMessage(NULL, "The user isn't logged!");
 		return ;
@@ -93,7 +113,7 @@ void	irc::User::welcome() const
 		return ;
 	}
 
-	_state = UserState::REGISTERED;
+	_state = REGISTERED;
 	this->reply(RPL_WELCOME(_nickName));
 
 	char message[512];
@@ -102,9 +122,14 @@ void	irc::User::welcome() const
 }
 
 /**
-	*
-	* @return nothing 
-	*/
+ * @brief	the user must join th group
+ * 			and send a message to all users that he has joineed the group,
+ * 			and print when he joined the group 
+ * 
+ * @param	pointer of the channel , wherw the user should connect
+ * 
+ * @return nothing
+ */
 void	irc::User::join(Channel* channel)
 {
 	channel->addUser(this);
@@ -133,10 +158,14 @@ void	irc::User::join(Channel* channel)
 
 
 /**
-	* 
-	* 
-	* @return nothing
-	*/
+ * @brief	the user must leave the group
+ * 			and send a message to all users that he is leaving
+ * 			and print when he left the group
+ * 
+ * @param	nothing
+ * 
+ * @return	nothing
+ */
 void	irc::User::leave()
 {
 	if (!_channel)

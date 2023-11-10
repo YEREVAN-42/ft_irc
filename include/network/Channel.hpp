@@ -36,9 +36,9 @@ namespace irc
 
         private:
             std::string         _name;
+            std::string         _key;
             User*               _admin;
             std::vector<User *> _userVector;
-            std::string         _key;
             size_t              _limitMember;
             bool                _flag;       // yes/no for external messages
     }; 

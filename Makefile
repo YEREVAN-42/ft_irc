@@ -15,16 +15,17 @@ LDFLAGS  :=
 NAME   = ircserv
 SRCDIR = $(shell find src -type d)
 INCDIR = $(shell find include -type d)
-OBJDIR = bin/obj
+BIN    = .bin
+OBJDIR = $(BIN)/obj
+DEPDIR = $(BIN)/dep
 
 vpath %.cpp $(foreach dir, $(SRCDIR), $(dir):)
 
-
 SRC := $(foreach dir, $(SRCDIR), $(foreach file, $(wildcard $(dir)/*.cpp), $(notdir $(file))))
 OBJ := $(addprefix $(OBJDIR)/, $(SRC:%.cpp=%.o))
+DEP := $(OBJ:$(OBJDIR)%.o=$(DEPDIR)%.d)  # Dependency files
 
-IFLAGS =	$(foreach dir, $(INCDIR), -I $(dir))
-
+IFLAGS = $(foreach dir, $(INCDIR), -I $(dir))
 
 # UNIX-based OS variables & settings
 RM = rm -rf
@@ -35,23 +36,30 @@ RM = rm -rf
 
 .DEFAULT_GOAL = all
 
+# Include dependency files if they exist
+-include $(DEP)
+
 # Builds the app
 $(NAME): $(OBJ)
 	@echo "-----\nCreating Binary File $(_YELLOW)$@$(_WHITE) ... \c"
 	@$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-	@mv ircserv bin
+	@mv ircserv $(BIN)
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
-# Building rule for .o files and its *.c/cpp in combination with all *.h/hpp`
-$(OBJDIR)/%.o:%.cpp Makefile
+# Building rule for .o files and its *.c/cpp in combination with all *.h/hpp
+$(OBJDIR)/%.o: %.cpp Makefile
 	@echo "Compiling $(_YELLOW)$@$(_WHITE) ... \c"
 	@mkdir -p $(OBJDIR)
 	@$(CXX) $(CXXFLAGS) $(IFLAGS) -o $@ -c $<
 	@echo "$(_GREEN)DONE$(_WHITE)"
 
+# Generate dependency files (*.d)
+$(DEPDIR)/%.d: %.cpp Makefile
+	@mkdir -p $(DEPDIR)
+	@$(CXX) $(CXXFLAGS) -MM $(IFLAGS) $< -MT $@ -MF $@
+
 .PHONY: all
 all: $(NAME)
-
 
 ##################### Cleaning rules for Unix-based OS ########################
 
@@ -59,37 +67,34 @@ all: $(NAME)
 .PHONY: clean
 clean:
 	@echo "$(_WHITE)Deleting Objects Directory $(_YELLOW)$(OBJ_DIR)$(_WHITE) ... \c"
-	@$(foreach file, $(OBJ), $(RM) $(file))
+	@$(foreach file, $(OBJ) $(DEP), $(RM) $(file))
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 .PHONY: fclean
 fclean: clean
 	@echo "Deleting Binary File $(_YELLOW)$(NAME)$(_WHITE) ... \c"
-	@$(RM) bin/
+	@$(RM) $(BIN)
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 .PHONY: re
-re: fclean all
-#	$(MAKE)
-
+re: fclean
+	@(MAKE)
 
 # Show macro details
 show:
 	@echo "$(_BLUE)SRC :\n$(_YELLOW)$(SRC)$(_WHITE)"
 	@echo "$(_BLUE)OBJ :\n$(_YELLOW)$(OBJ)$(_WHITE)"
-	@echo "$(_BLUE)DEP :\n$(_YELLOW)$(OBJ)$(_WHITE)"
-	@echo "$(_BLUE)CXXFLAGS :\n$(_YELLOW)$(CFLAGS)$(_WHITE)"
+	@echo "$(_BLUE)DEP :\n$(_YELLOW)$(DEP)$(_WHITE)"
+	@echo "$(_BLUE)CXXFLAGS :\n$(_YELLOW)$(CXXFLAGS)$(_WHITE)"
 	@echo "$(_BLUE)IFLAGS :\n$(_YELLOW)$(IFLAGS)$(_WHITE)"
 	@echo "\n-----\n"
-	@echo "$(_BLUE)Compiling : \n$(_YELLOW)$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(_WHITE)"
-
-
+	@echo "$(_BLUE)Compiling : \n$(_YELLOW)$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME) $(_WHITE)"
 
 ###############################################################################
 ########################### Building with valgrind ############################
 ###############################################################################
 
-LOGFILE	 = valgrind-out.txt
+LOGFILE = valgrind-out.txt
 
 # for Building/compiling with valgrind
 # - you have to commeent out "-g -fsanitize=address" from CXXFLAGS
@@ -108,6 +113,9 @@ valgrind: all
 .PHONY: valgrind_clean
 valgrind_clean: fclean
 	$(RM) $(LOGFILE)
+
+
+
 
 
 # #############################################################################
