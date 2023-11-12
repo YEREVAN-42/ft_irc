@@ -2,11 +2,12 @@
 # define __CHANNEL_HPP__
 
 # include "irc.hpp"
+
 # include "User.hpp"
 
 namespace irc
 {
-    class User;
+	class User;
 
     class Channel
     {

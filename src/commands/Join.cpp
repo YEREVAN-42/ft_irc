@@ -1,4 +1,4 @@
-#include "Join.hpp"
+#include "Command.hpp"
 
 irc::Join::Join(Server* server) : Command(server){}
 irc::Join::~Join(){}
@@ -29,16 +29,16 @@ void    irc::Join::execute(User* user, std::vector<std::string> args)
 	else
 		pass = "";
 
-    Channel *channel = user->getChannel;
+    Channel *channel = user->getChannel();
 	if (channel) 
     {
 		user->reply(ERR_TOOMANYCHANNELS(user->getNickName(), user_name));
 		return;
 	}
 
-    channel = server->getChannel(user_name);
+    channel = _server->getChannel(user_name);
 	if (!channel)
-		channel = server->createChannel(user_name, pass, user);
+		channel = _server->createChannel(user_name, pass, user);
 
     if (channel->getLimit() > 0 && channel->getSize() >= channel->getLimit())
     {
@@ -46,7 +46,7 @@ void    irc::Join::execute(User* user, std::vector<std::string> args)
 		return;
 	}
 
-    if (channel->get_key() != pass)
+    if (channel->getKey() != pass)
     {
 		user->reply(ERR_BADCHANNELKEY(user->getNickName(), user_name));
 		return;

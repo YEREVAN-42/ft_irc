@@ -31,15 +31,16 @@ int main(int arg, const char* argv[])
 {
 	ValidInput(arg, argv);
 
-	irc::Server server(std::atoi(argv[1]), argv[2]);
-
-	std::cout
-			<< BOLDGREEN
-			<< "Server are creating."
-			<< RESET << std::endl;
 
 	try
 	{
+		irc::Server server(std::atoi(argv[1]), argv[2]);
+
+		std::cout
+				<< BOLDGREEN
+				<< "Server are creating."
+				<< RESET << std::endl;
+
 		server.start();
 
 		return 0;

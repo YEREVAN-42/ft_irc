@@ -1,7 +1,6 @@
 #include "Parser.hpp"
 
 irc::Parser::Parser(Server* server)
-	: _server(server)
 {
 	_commands["INVITE"] = new Invite(server);
 	_commands["JOIN"]   = new Join(server);

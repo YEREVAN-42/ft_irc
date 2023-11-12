@@ -30,6 +30,7 @@
 
 namespace irc
 {
+
 	// Literal Definition Value
 	const char CR = '\r';
 	const char LF = '\n';

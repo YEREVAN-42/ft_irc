@@ -1,4 +1,4 @@
-#include "Invite.hpp"
+#include "Command.hpp"
 
 irc::Invite::Invite(Server* server) : Command(server){}
 irc::Invite::~Invite(){}
@@ -29,13 +29,13 @@ void	irc::Invite::execute(User* user, std::vector<std::string> args)
         user->reply(ERR_NOTONCHANNEL(user->getNickName(), channel_name));
         return;
     }
-	if (channel->getAdmin() != user_name)
+	if (channel->getAdmin() != user)
     {
         user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
         return;
     }
 
-	User *dest = _server->getClient(user_name);
+	User *dest = _server->getUser(user_name);
     if (!dest)
     {
         user->reply(ERR_NOSUCHNICK(user->getNickName(), user_name));
