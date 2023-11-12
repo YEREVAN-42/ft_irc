@@ -4,13 +4,14 @@
 #include "User.hpp"
 #include "Server.hpp"
 #include "Command.hpp"
+#include "Channel.hpp"
 
 namespace irc
 {
 	class Kick : public Command
 	{
 		public:
-			Kick(/* args */);
+			Kick(Server *server);
 			~Kick();
 
 		void    execute(User* user, std::vector<std::string> args);

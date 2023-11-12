@@ -1,5 +1,5 @@
 #include "Command.hpp"
 
-irc::Command::Command(){}
+irc::Command::Command(Server *server) : _server(server){}
 irc::Command::~Command(){}
 

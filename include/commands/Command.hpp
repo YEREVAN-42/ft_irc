@@ -3,8 +3,7 @@
 
 #include <iostream>
 #include "Server.hpp"
-
-class User;
+#include "User.hpp"
 
 namespace irc
 {
@@ -12,12 +11,13 @@ namespace irc
 	class Command
 	{
 		public:
-			Command();
+			Command(Server *server);
 			~Command();
+
+			virtual void execute(User* user, std::vector<std::string> args) = 0;
+
 		protected:
 			Server* _server;
-
-		 virtual void execute(User* user, std::vector<std::string> args) = 0;
 	};
 }
 
