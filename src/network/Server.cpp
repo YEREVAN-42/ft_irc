@@ -3,7 +3,7 @@
 irc::Server::Server(int port, const std::string& password)
 	: _port(port), _password(password), _host("127.0.0.1")
 {
-	_sock = createSocket()
+	_sock = createSocket();
 	_parser = new Parser(this);
 }
 
@@ -14,11 +14,11 @@ irc::Server::~Server()
 		delete _parser;
 	}
 
-	for (std::size_t i = 0; i < _channel.size(); ++i)
+	for (std::size_t i = 0; i < _channels.size(); ++i)
 	{
-		if (_channel[i] != NULL)
+		if (_channels[i] != NULL)
 		{
-			delete _channel[i];
+			delete _channels[i];
 		}
 	}
 }
@@ -77,10 +77,55 @@ const  irc::Channel*	irc::Server::getChannel(const std::string& name) const
 	return NULL; 
 }
 
+/**
+ * @brief  create a new Channel and Adds Channel to the vector 
+ *
+ * @param  the channel name, the channel key, the admin of this channel
+ * 
+ * @return pointer of the Channel that just created
+ */
 irc::Channel*	irc::Server::createChannel(const std::string& name, const std::string& key, User* admin)
 {
 	Channel*	channel = new Channel(name, key, admin);
 	_channels.push_back(channel);
 
 	return channel;
+}
+
+const std::string	irc::Server::readMessage(int fd) const
+{
+	std::string	message;
+	char		buffer[100];
+
+	bzero(buffer, 100);
+
+	while (strstr(buffer, "\n") != NULL)
+	{
+		bzero(buffer, 100);
+
+		if (recv(fd, buffer, 100, 0) == -1 && \
+			errno != EWOULDBLOCK)
+		{
+			throw std::runtime_error("Error while reading buffer from a user!");
+		}
+
+		message.append(buffer);
+	}
+
+	return message;
+}
+
+void	irc::Server::onUserMessage(int fd)
+{
+	try
+	{
+		User* user = _users.at(fd);
+
+		_parser->invoke(user, this->readMessage(fd));
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 }

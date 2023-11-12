@@ -14,10 +14,12 @@ namespace irc
 		public:
 			Command();
 			~Command();
+
+			virtual void execute(User* user, std::vector<std::string> args) = 0;
+
 		protected:
 			Server* _server;
 
-		 virtual void execute(User* user, std::vector<std::string> args) = 0;
 	};
 }
 
