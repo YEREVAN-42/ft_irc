@@ -36,15 +36,15 @@ namespace irc
 			const User*			getUser(const std::string&)    const;
 			const Channel*		getChannel(const std::string&) const;
 
-		//	Handle Clients
-			void	onClientConnect();
-			void	onClientDisconnect(int);
-			void	onClientMessage(int);
+		//	Handle User
+			void	onUserConnect();
+			void	onUserDisconnect(int);
+			void	onUserMessage(int);
 
-			std::string	readMessage(int);
+			const std::string	readMessage(int) const;
 
         //	Create Channel
-			Channel*	createChannel(const std::string&, const std::string&, Client*);
+			Channel*	createChannel(const std::string&, const std::string&, User*);
 
         //	Create Socket
 			int	createSocket();

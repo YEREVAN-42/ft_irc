@@ -1,11 +1,12 @@
 #include "irc.hpp"
+#include "Server.hpp"
 
 void ValidInput(int argNum, const char* argVal[])
 {
 	if (argNum != 3)
 	{
 		irc::ErrorMessage("Wrong number of arguments!!!",
-				"Try again like:\t ./ircserv <port> <password>" );
+				"Try again like:\t ./ircserv <port> <password>");
 		exit(EXIT_FAILURE);
 	}
 
@@ -30,10 +31,21 @@ int main(int arg, const char* argv[])
 {
 	ValidInput(arg, argv);
 
-	// irc::Server server(std::atoi(argv[1]), argv[2]);
+	irc::Server server(std::atoi(argv[1]), argv[2]);
 
-	std::cout << BOLDGREEN << "Server are creating." << RESET << std::endl;
+	std::cout
+			<< BOLDGREEN
+			<< "Server are creating."
+			<< RESET << std::endl;
 
+	try
+	{
+		server.start();
 
-	return 0;
+		return 0;
+	}
+	catch (const std::exception& e)
+	{
+		irc::ErrorMessageFromErrno(__func__, e.what(), errno);
+	}
 }
