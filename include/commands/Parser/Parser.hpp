@@ -8,16 +8,14 @@
 # include <map>
 // # include <vector>
 
-# include "User.hpp"
-# include "Server.hpp"
 
 # include "Command.hpp"
-# include "Invite.hpp"
-# include "Join.hpp"
-# include "Kick.hpp"
 
 namespace irc
 {
+	class Command;
+	class Server;
+
 	class Parser
 	{
 		public:
@@ -27,10 +25,9 @@ namespace irc
 			void	invoke(User*, const std::string&);
 
 		private:
-			static std::string	trim(const std::string&, const char* WHITESPACE = " \r\f\t\n\v");
+			static std::string	trim(const std::string&, const char*);
 
 		private:
-			Server*									_server;
 			std::map<const std::string, Command*>	_commands;
 	};
 }

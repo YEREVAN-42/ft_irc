@@ -3,12 +3,15 @@
 
 # include "irc.hpp"
 
+
 # include "User.hpp"
 # include "Parser.hpp"
 # include "Channel.hpp"
 
 namespace irc
 {
+	class Parser;
+
 	class Server
 	{
 		private:
@@ -33,8 +36,8 @@ namespace irc
 
 		//	getters
 			const std::string&	getPassword()                  const;
-			const User*			getUser(const std::string&)    const;
-			const Channel*		getChannel(const std::string&) const;
+			User*				getUser(const std::string&)    const;
+			Channel*			getChannel(const std::string&) const;
 
 		//	Handle User
 			void	onUserConnect();

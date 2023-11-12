@@ -1,4 +1,4 @@
-#include "Kick.hpp"
+#include "Command.hpp"
 
 irc::Kick::Kick(Server* server) : Command(server){}
 irc::Kick::~Kick(){}
@@ -17,7 +17,7 @@ void	irc::Kick::execute(User* user, std::vector<std::string> args)
 {
 	if (args.size() < 2)
 	{
-		user->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "KICK"))
+		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "KICK"));
 	}
 
 	std::string channel_name = args[0];
@@ -34,7 +34,7 @@ void	irc::Kick::execute(User* user, std::vector<std::string> args)
 		while (it != end)
 		{
 			reason.append(*it + " ");
-			it++
+			it++;
 		}
 	}
 
@@ -45,13 +45,13 @@ void	irc::Kick::execute(User* user, std::vector<std::string> args)
         return;
     }
 
-	if (channel->getAdmin() != user_name)
+	if (channel->getAdmin() != user)
     {
         user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
         return;
     }
 
-	User *dest = _server->getClient(user_name);
+	User *dest = _server->getUser(user_name);
     if (!dest)
     {
         user->reply(ERR_NOSUCHNICK(user->getNickName(), user_name));

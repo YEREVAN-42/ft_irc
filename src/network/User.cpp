@@ -14,7 +14,7 @@ const std::string&	irc::User::getUserName() const { return _userName; }
 const std::string&	irc::User::getNickName() const { return _nickName; }
 const std::string&	irc::User::getRealName() const { return _realName; }
 const std::string&	irc::User::getHostName() const { return _hostName; }
-const irc::Channel*	irc::User::getChannel()  const { return _channel;  }
+irc::Channel*	irc::User::getChannel()  const { return _channel;  }
 
 bool				irc::User::isRegistered() const { return _state == REGISTERED; }
 
