@@ -1,21 +1,21 @@
-#ifndef __INVITE_HPP__
-# define __INVITE_HPP__
+#ifndef __TOPIC_HPP__
+# define __TOPIC_HPP__
 
 #include "User.hpp"
 #include "Server.hpp"
-#include "Channel.hpp"
 #include "Command.hpp"
+#include "Channel.hpp"
 
 namespace irc
 {
-	class Invite : public Command
+	class Topic : public Command
 	{
 		public:
-			Invite(Server *server);
-			~Invite();
+			Topic(Server *server);
+			~Topic();
 
 		void    execute(User* user, std::vector<std::string> args);
 	};
 }
 
-#endif //__INVITE_HPP__
+#endif //__TOPIC_HPP__
