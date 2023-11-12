@@ -2,22 +2,66 @@
 # define __COMMAND_HPP__
 
 #include <iostream>
-#include "Server.hpp"
 
-class User;
+# include "irc.hpp"
+
+#include "User.hpp"
+#include "Server.hpp"
+#include "Channel.hpp"
+
+
 
 namespace irc
 {
 
+	class Server;
+
 	class Command
 	{
 		public:
-			Command();
-			~Command();
+			Command(Server *server);
+			virtual ~Command();
+
+			virtual void execute(User* user, std::vector<std::string> args) = 0;
+
 		protected:
 			Server* _server;
+	};
 
-		 virtual void execute(User* user, std::vector<std::string> args) = 0;
+	class Invite : public Command
+	{
+		public:
+			Invite(Server *server);
+			~Invite();
+
+		void    execute(User* user, std::vector<std::string> args);
+	};
+
+	class Join : public Command
+	{
+		public:
+			Join(Server *server);
+			~Join();
+
+		void    execute(User* user, std::vector<std::string> args);
+	};
+
+	class Kick : public Command
+	{
+		public:
+			Kick(Server *server);
+			~Kick();
+
+		void    execute(User* user, std::vector<std::string> args);
+	};
+
+	class Topic : public Command
+	{
+		public:
+			Topic(Server *server);
+			~Topic();
+
+		// void    execute(User* user, std::vector<std::string> args);
 	};
 }
 

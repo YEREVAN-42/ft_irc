@@ -2,6 +2,7 @@
 # define __USER_HPP__
 
 # include "irc.hpp"
+
 # include "Channel.hpp"
 
 namespace irc
@@ -32,7 +33,7 @@ namespace irc
 			const std::string&	getHostName() const;
 			const std::string	getPrefix()   const;
 
-			const Channel*	getChannel() const;
+			Channel*	getChannel() const;
 
 			const UserState&	getState() const;
 

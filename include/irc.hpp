@@ -30,6 +30,7 @@
 
 namespace irc
 {
+
 	// Literal Definition Value
 	const char CR = '\r';
 	const char LF = '\n';
@@ -68,11 +69,14 @@ namespace irc
     inline const std::string  ERR_NOSUCHCHANNEL(const std::string& source, const std::string& channel)
     { return std::string("403 " + source + " " + channel + " :No such channel"); }
 
-    inline const std::string  ERR_BADCHANNELKEY(const std::string& source, const std::string& channel)
-    { return std::string("475 " + source + " " + channel + " :Cannot join channel (+k)"); }
-
     inline const std::string  ERR_CHANNELISFULL(const std::string& source, const std::string& channel)
     { return std::string("471 " + source + " " + channel + " :Cannot join channel (+l)"); }
+    
+	inline const std::string  ERR_BADCHANNELKEY(const std::string& source, const std::string& channel)
+    { return std::string("475 " + source + " " + channel + " :Cannot join channel (+k)"); }
+	
+	inline const std::string ERR_NOCHANMODES(std::string channel)
+	{ return std::string(channel + " :Channel doesn't support modes"); }
 
     inline const std::string  ERR_CANNOTSENDTOCHAN(const std::string& source, const std::string& channel)
     { return std::string("404 " + source + " " + channel + " :Cannot send to channel"); }
