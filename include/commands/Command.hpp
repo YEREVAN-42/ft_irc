@@ -109,11 +109,11 @@ namespace irc
 			virtual void	execute(User* user, std::vector<std::string> args);
 	};
 
-	class User : public Command
+	class UserCom : public Command
 	{
 		public:
-			User(Server *server, bool auth);
-			virtual ~User();
+			UserCom(Server *server, bool auth);
+			virtual ~UserCom();
 
 			virtual void	execute(User* user, std::vector<std::string> args);
 	};

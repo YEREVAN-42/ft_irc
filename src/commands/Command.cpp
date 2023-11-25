@@ -5,4 +5,4 @@ irc::Command::Command(Server *server, bool auth)
 {	}
 irc::Command::~Command(){}
 
-irc::Command::authRequired() const { return _auth; }
+bool irc::Command::authRequired() const { return _auth; }
