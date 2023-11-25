@@ -2,9 +2,13 @@
 
 irc::Parser::Parser(Server* server)
 {
-	_commands["INVITE"] = new Invite(server);
+	_commands["PASS"]   = new Pass(server, false);
+	_commands["NICK"]   = new Nick(server, false);
+	_commands["USER"]   = new UserCom(server, false);
+
 	_commands["JOIN"]   = new Join(server);
 	_commands["KICK"]   = new Kick(server);
+	_commands["INVITE"] = new Invite(server);
 }
 
 irc::Parser::~Parser()
@@ -81,6 +85,11 @@ void	irc::Parser::invoke(User* user, const std::string& message)
 				args.push_back(buffer);
 			}
 
+			if (!user->isRegistered() && cmd->authRequired())
+			{
+				user->reply(ERR_NOTREGISTERED(client->get_nickname()));
+				return ;
+			}
 
 			cmd->execute(user, args);
 		}
