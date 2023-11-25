@@ -14,8 +14,8 @@ namespace irc
 		public:
 			enum UserState
 			{
-				HANDSHAKE			= 1,
-				LOGIN					= 2,
+				HANDSHAKE		= 1,
+				LOGIN			= 2,
 				REGISTERED		= 3,
 				DISCONNECTED	= 4
 			};
