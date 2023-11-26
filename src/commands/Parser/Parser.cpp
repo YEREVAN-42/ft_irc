@@ -87,7 +87,7 @@ void	irc::Parser::invoke(User* user, const std::string& message)
 
 			if (!user->isRegistered() && cmd->authRequired())
 			{
-				user->reply(ERR_NOTREGISTERED(client->get_nickname()));
+				user->reply(ERR_NOTREGISTERED(user->getNickName()));
 				return ;
 			}
 

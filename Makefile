@@ -22,7 +22,7 @@ COMPILING=$(_BLUE)COMPILING$(NC)
 CXX = c++
 
 # Compiler flags
-CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+CXXFLAGS := -Wall -Wextra -Werror -MMD -std=c++98 -g3 -fsanitize=address
 LDFLAGS  :=
 
 # UNIX-based OS variables & settings
@@ -38,6 +38,9 @@ SRCDIR = src
 # Object directory
 OBJDIR = $(BIN)/obj
 
+# Dependency directory
+DEPDIR = $(BIN)/dep
+
 # Include directory
 INCDIR = include
 INC    = $(shell find $(INCDIR) -type d)
@@ -50,6 +53,9 @@ SRC += $(wildcard $(SRCDIR)/*.cpp)
 
 # Object files
 OBJ = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
+
+# Dependency files
+DEP = $(patsubst $(OBJDIR)/%.o, $(DEPDIR)/%.d, $(OBJ))
 
 # Executable name
 NAME = ircserv
@@ -71,6 +77,8 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
 	@$(CXX) $(CXXFLAGS) $(IFLAGS) -c $< -o $@
 	@echo "$(_GREEN)DONE$(_WHITE)"
 
+-include $(DEP)
+
 # Run rule
 run:
 	@$(BIN)/$(NAME)
@@ -87,7 +95,7 @@ show:
 # Clean rule
 clean:
 	@echo "$(_WHITE)Deleting Objects Directory $(_YELLOW)$(OBJ_DIR)$(_WHITE) ... \c"
-	@$(RM) $(OBJ)
+	$(RM) $(OBJ) $(DEP)
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 fclean: clean

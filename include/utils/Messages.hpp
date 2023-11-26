@@ -1,6 +1,7 @@
 #ifndef  __MESSAGES_HPP__
 # define __MESSAGES_HPP__
 
+# include <cstdlib>
 # include <cstring>
 # include <iostream>
 

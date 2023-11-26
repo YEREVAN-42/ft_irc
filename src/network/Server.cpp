@@ -94,6 +94,13 @@ irc::Channel*	irc::Server::createChannel(const std::string& name, const std::str
 	return channel;
 }
 
+/**
+ * @brief Reads a message from the specified file descriptor.
+ * 
+ * @param fd file descriptor from which to read the message.
+ * 
+ * @return A std::string containing the complete message read from the file descriptor.
+ */
 const std::string	irc::Server::readMessage(int fd) const
 {
 	std::string	message;
@@ -117,6 +124,13 @@ const std::string	irc::Server::readMessage(int fd) const
 	return message;
 }
 
+/**
+ * @brief Handles incoming messages from a connected user.
+ * 
+ * @param fd file descriptor associated with the connected user.
+ * 
+ * @return nothing
+ */
 void	irc::Server::onUserMessage(int fd)
 {
 	try
@@ -132,6 +146,13 @@ void	irc::Server::onUserMessage(int fd)
 	
 }
 
+/**
+ * @brief Handles the disconnection of a user.
+ * 
+ * @param fd file descriptor associated with the user to be disconnected.
+ * 
+ * @return nothing
+ */
 void	irc::Server::onUserDisconnect(int fd)
 {
 	try
@@ -169,6 +190,13 @@ void	irc::Server::onUserDisconnect(int fd)
 	
 }
 
+/**
+ * @brief Handles the connection of a new user.
+ * 
+ * @param nothing
+ * 
+ * @return nothing
+ */
 void	irc::Server::onUserConnect()
 {
 	struct sockaddr_in	addr = {};
@@ -200,6 +228,13 @@ void	irc::Server::onUserConnect()
 	Log(message);
 }
 
+/**
+ * @brief Creates and configures a socket for the IRC server.
+ * 
+ * @param nothing
+ * 
+ * @return file descriptor of the created and configured socket.
+ */
 int	irc::Server::createSocket()
 {
 	int	sockFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -241,6 +276,13 @@ int	irc::Server::createSocket()
 	return sockFd;
 }
 
+/**
+ * @brief Starts the IRC server and enters the main event loop.
+ * 
+ * @param nothing
+ * 
+ * @return nothing
+ */
 void	irc::Server::start()
 {
 	pollfd srv = {_sock, POLLIN, 0};
