@@ -22,7 +22,7 @@ COMPILING=$(_BLUE)COMPILING$(NC)
 CXX = c++
 
 # Compiler flags
-CXXFLAGS := -Wall -Wextra -Werror -MMD -std=c++98 -g3 -fsanitize=address
+CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
 LDFLAGS  :=
 
 # UNIX-based OS variables & settings
@@ -38,13 +38,11 @@ SRCDIR = src
 # Object directory
 OBJDIR = $(BIN)/obj
 
-# Dependency directory
-DEPDIR = $(BIN)/dep
-
 # Include directory
-INCDIR = include
-INC    = $(shell find $(INCDIR) -type d)
-IFLAGS = $(foreach dir, $(INC), -I $(dir))
+INCDIR  = include
+INC     = $(shell find $(INCDIR) -type d)
+IFLAGS  = $(foreach dir, $(INC), -I $(dir))
+INCLUDE = $(foreach dir, $(INC), $(dir)/*.hpp)
 
 # Source files
 SRC := $(wildcard $(SRCDIR)/***/**/*.cpp)
@@ -53,9 +51,6 @@ SRC += $(wildcard $(SRCDIR)/*.cpp)
 
 # Object files
 OBJ = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
-
-# Dependency files
-DEP = $(patsubst $(OBJDIR)/%.o, $(DEPDIR)/%.d, $(OBJ))
 
 # Executable name
 NAME = ircserv
@@ -71,13 +66,11 @@ $(NAME): $(OBJ)
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 # Rule to build object files
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCLUDE) Makefile
 	@echo "Compiling $(_YELLOW)$@$(_WHITE) ... \c"
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CXXFLAGS) $(IFLAGS) -c $< -o $@
 	@echo "$(_GREEN)DONE$(_WHITE)"
-
--include $(DEP)
 
 # Run rule
 run:
@@ -87,6 +80,7 @@ run:
 show:
 	@echo "$(_BLUE)SRC :\n$(_YELLOW)$(SRC)$(_WHITE)"
 	@echo "$(_BLUE)OBJ :\n$(_YELLOW)$(OBJ)$(_WHITE)"
+	@echo "$(_BLUE)OBJ :\n$(_YELLOW)$(INCLUDE)$(_WHITE)"
 	@echo "$(_BLUE)CXXFLAGS :\n$(_YELLOW)$(CXXFLAGS)$(_WHITE)"
 	@echo "$(_BLUE)IFLAGS :\n$(_YELLOW)$(IFLAGS)$(_WHITE)"
 	@echo "\n-----\n"
@@ -95,7 +89,7 @@ show:
 # Clean rule
 clean:
 	@echo "$(_WHITE)Deleting Objects Directory $(_YELLOW)$(OBJ_DIR)$(_WHITE) ... \c"
-	$(RM) $(OBJ) $(DEP)
+	@$(RM) $(OBJ)
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 fclean: clean
