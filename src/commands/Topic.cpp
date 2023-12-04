@@ -11,28 +11,29 @@ irc::Topic::~Topic(){}
  * @param   <channel> [ <topic> ]
  * @return   nothing
  */
-// void	irc::Topic::execute(User* user, std::vector<std::string> args)
-// {
-// 	if (args.size() < 2)
-// 	{
-// 		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "Topic"))
-// 	}
 
-// 	std::string channel_name = args[0];
-// 	std::string topic = args[1];
-// 	std::string second_topic = args[2];
+void	irc::Topic::execute(User* user, std::vector<std::string> args)
+{
+	if (args.size() < 2)
+	{
+		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "Topic"));
+	}
 
-// 	Channel *channel = user->getChannel();
-//     if (!channel || channel->getName() != channel_name)
-//     {
-//         user->reply(ERR_NOTONCHANNEL(user->getNickName(), channel_name));
-//         return;
-//     }
+	std::string channel_name = args[0];
+	std::string topic = args[1];
+	std::string second_topic = args[2];
 
-// 	if (channel->getAdmin() != user_name)
-//     {
-//         user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
-//         return;
-//     }
-// 	channel->topic(user, dest, second_topic);
-// }
+	Channel *channel = user->getChannel();
+    if (!channel || channel->getName() != channel_name)
+    {
+        user->reply(ERR_NOTONCHANNEL(user->getNickName(), channel_name));
+        return;
+    }
+
+	if (channel->getAdmin() != user)
+    {
+        user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
+        return;
+    }
+	// channel->topic(user, dest, second_topic);
+}
