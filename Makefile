@@ -39,9 +39,10 @@ SRCDIR = src
 OBJDIR = $(BIN)/obj
 
 # Include directory
-INCDIR = include
-INC    = $(shell find $(INCDIR) -type d)
-IFLAGS = $(foreach dir, $(INC), -I $(dir))
+INCDIR  = include
+INC     = $(shell find $(INCDIR) -type d)
+IFLAGS  = $(foreach dir, $(INC), -I $(dir))
+INCLUDE = $(foreach dir, $(INC), $(dir)/*.hpp)
 
 # Source files
 SRC := $(wildcard $(SRCDIR)/***/**/*.cpp)
@@ -65,7 +66,7 @@ $(NAME): $(OBJ)
 	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
 
 # Rule to build object files
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp Makefile
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCLUDE) Makefile
 	@echo "Compiling $(_YELLOW)$@$(_WHITE) ... \c"
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CXXFLAGS) $(IFLAGS) -c $< -o $@
@@ -79,6 +80,7 @@ run:
 show:
 	@echo "$(_BLUE)SRC :\n$(_YELLOW)$(SRC)$(_WHITE)"
 	@echo "$(_BLUE)OBJ :\n$(_YELLOW)$(OBJ)$(_WHITE)"
+	@echo "$(_BLUE)OBJ :\n$(_YELLOW)$(INCLUDE)$(_WHITE)"
 	@echo "$(_BLUE)CXXFLAGS :\n$(_YELLOW)$(CXXFLAGS)$(_WHITE)"
 	@echo "$(_BLUE)IFLAGS :\n$(_YELLOW)$(IFLAGS)$(_WHITE)"
 	@echo "\n-----\n"
