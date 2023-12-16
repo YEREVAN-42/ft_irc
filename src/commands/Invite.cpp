@@ -12,7 +12,7 @@ irc::Invite::~Invite(){}
  * @return   nothing
  */
 
-void	irc::Invite::execute(User* user, std::vector<std::string> args)
+void	irc::Invite::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.empty())
     {

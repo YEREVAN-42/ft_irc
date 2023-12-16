@@ -3,7 +3,7 @@
 irc::Mode::Mode(Server* server) : Command(server){}
 irc::Mode::~Mode(){}
 
-void	irc::Mode::execute(User* user, std::vector<std::string> args)
+void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.empty())
     {

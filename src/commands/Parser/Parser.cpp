@@ -6,9 +6,15 @@ irc::Parser::Parser(Server* server)
 	_commands["NICK"]   = new Nick(server, false);
 	_commands["USER"]   = new UserCom(server, false);
 
-	_commands["JOIN"]   = new Join(server);
-	_commands["KICK"]   = new Kick(server);
-	_commands["INVITE"] = new Invite(server);
+	_commands["PING"]    = new Ping(server);
+	_commands["PONG"]    = new Pong(server);
+	_commands["JOIN"]    = new Join(server);
+	_commands["KICK"]    = new Kick(server);
+	_commands["MODE"]    = new Mode(server);
+	_commands["TOPIC"]   = new Topic(server);
+	_commands["INVITE"]  = new Invite(server);
+	_commands["NOTICE"]  = new Notice(server);
+	_commands["PRIVMSG"] = new PrivMsg(server);
 }
 
 irc::Parser::~Parser()

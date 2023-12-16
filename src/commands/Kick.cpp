@@ -13,7 +13,7 @@ irc::Kick::~Kick(){}
                [<comment>]
  * @return   nothing
  */
-void	irc::Kick::execute(User* user, std::vector<std::string> args)
+void	irc::Kick::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.size() < 2)
 	{
@@ -28,8 +28,8 @@ void	irc::Kick::execute(User* user, std::vector<std::string> args)
 	{
 		reason = "";
 
-		std::vector<std::string>::iterator it = args.begin();
-		std::vector<std::string>::iterator end = args.end();
+		std::vector<std::string>::const_iterator it = args.begin();
+		std::vector<std::string>::const_iterator end = args.end();
 
 		while (it != end)
 		{
