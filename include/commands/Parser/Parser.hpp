@@ -8,7 +8,6 @@
 # include <map>
 # include <vector>
 
-
 # include "Command.hpp"
 
 namespace irc
@@ -31,6 +30,5 @@ namespace irc
 			std::map<const std::string, Command*>	_commands;
 	};
 }
-
 
 #endif // __PARSER_HPP__

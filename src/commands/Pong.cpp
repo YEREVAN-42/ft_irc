@@ -5,7 +5,7 @@ irc::Pong::~Pong() {	}
 
 //	syntax: PONG <server1> [<server2>]
 
-void	irc::Pong::execute(User* user, std::vector<std::string> args)
+void	irc::Pong::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.empty())
 	{

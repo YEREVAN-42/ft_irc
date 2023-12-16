@@ -14,7 +14,7 @@ irc::Join::~Join(){}
  * @return   nothing
  */
 
-void    irc::Join::execute(User* user, std::vector<std::string> args)
+void    irc::Join::execute(User* user, const std::vector<std::string>& args)
 {
     if (args.empty())
     {

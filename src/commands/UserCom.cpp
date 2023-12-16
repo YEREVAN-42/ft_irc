@@ -8,7 +8,7 @@ irc::UserCom::~UserCom()
 
 // syntax: USER <username> <hostname> <servername> <realname>
 
-void irc::UserCom::execute(User* user, std::vector<std::string> args)
+void irc::UserCom::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.size() < 4)
 	{

@@ -1,18 +1,18 @@
 #include "Channel.hpp"
 
-irc::Channel::Channel(const std::string &n, const std::string &k, User* a)
+irc::Channel::Channel(const std::string &n, const std::string &k, irc::User* a)
 : _name(n), _key(k), _admin(a)
 {	}
 
 irc::Channel::~Channel(){}
 
 const std::string&	irc::Channel::getName() const { return _name; }
-const std::string&	irc::Channel::getKey() const { return _key; }
-irc::User*          irc::Channel::getAdmin() const { return _admin; }
+irc::User* irc::Channel::getAdmin() const { return _admin; }
 size_t              irc::Channel::getLimit() const { return _limitMember; }
 bool                irc::Channel::getExtMsg() const { return _flag; }
-size_t              irc::Channel::getSize() const { return _limitMember; }
-
+size_t              irc::Channel::getSize() const { return _userVector.size(); }
+int                 irc::Channel::getMode() const { return _modes; }
+const std::string&  irc::Channel::getKey() const { return _key; }
 /**
  * @brief By filtering the vectors of the users, find the nickname and fill them in other vector.
  * 
@@ -20,13 +20,13 @@ size_t              irc::Channel::getSize() const { return _limitMember; }
  * 
  * @return a vector containing the nicknames
  */
-std::vector<std::string>    irc::Channel::getNickNames()
+std::vector<std::string>    irc::Channel::getNickNames() const
 {
     std::vector<std::string>    nickVector;
     userIter                    it_b = _userVector.begin();
     userIter                    it_e = _userVector.end();
 
-    for (User* user = *it_b; it_b != it_e; ++it_b)
+    for (const irc::User* user = *it_b; it_b != it_e; ++it_b)
     {
         std::string nickname = (user == _admin ? "@" : "") + user->getNickName();
         nickVector.push_back(nickname);
@@ -34,18 +34,68 @@ std::vector<std::string>    irc::Channel::getNickNames()
     return nickVector;
 }
 
-void    irc::Channel::setKey(const std::string& key) { _key = key; }
 void    irc::Channel::setLimit(size_t limit) { _limitMember = limit; }
 void    irc::Channel::setExtMsg(bool flag) { _flag = flag; }
+void    irc::Channel::setKey(const std::string& key)
+{
+    std::string message = NULL;
+    if (_modes & PRIVATE_KEY)
+    {
+        _key = key;
+       message =  _name + " channel password changed.";
+    }
+    else
+        message = "You cannot change " + _name + "  channel password in the current mode.";
+    Log(message);
+}
+
+void irc::Channel::removeKey()
+{
+  std::string message = NULL;
+   if (_modes & PRIVATE_KEY)
+    {
+        _key.clear();
+        message =  _name + " channel password removed.";
+    }
+    else
+        message = "You cannot remove " + _name + "  channel password in the current mode.";
+    Log(message);
+}
+
+void irc::Channel::setTopic(const std::string& topic)
+{
+   std::string message = NULL;
+   if (_modes & REST_TOPIC)
+    {
+        _topic = topic;
+        message =  _name + " channel topic chenged.";
+    }
+    else
+        message = "You cannot change " + _name + "  channel topic in the current mode.";
+    Log(message);
+}
+
+void irc::Channel::removeTopic(const std::string& topic)
+{
+  std::string message = NULL;
+   if (_modes & REST_TOPIC)
+    {
+        _topic = topic;
+        message =  _name + " channel topic removed.";
+    }
+    else
+        message = "You cannot remove " + _name + "  channel topic in the current mode.";
+    Log(message);
+}
 
 /**
- * @brief Eject a user from the channel
+ * @brief Eject(remove) a user from the channel
  * 
- * @param user-the user to remove, target-the user from whose channel user should be removed, the reason for removal
+ * @param user the user to remove, target the user from whose channel user should be removed, the reason for removal
  * 
  * @return nothing
  */
-void    irc::Channel::kick(User* user, User* target, const std::string& reason)
+void    irc::Channel::kick(irc::User* user, irc::User* target, const std::string& reason)
 {
     this->broadcast(RPL_KICK(user->getPrefix(), _name, target->getNickName(), reason));
     this->removeUser(target);
@@ -61,7 +111,7 @@ void    irc::Channel::kick(User* user, User* target, const std::string& reason)
  * 
  * @return nothing
  */
-void    irc::Channel::addUser(User* puser)
+void    irc::Channel::addUser(irc::User* puser)
 {
     _userVector.push_back(puser);
 }
@@ -73,7 +123,7 @@ void    irc::Channel::addUser(User* puser)
  * 
  * @return nothing
  */
-void    irc::Channel::removeUser(User* puser)
+void    irc::Channel::removeUser(irc::User* puser)
 {
     userIter it_b = _userVector.begin();
     userIter it_e = _userVector.end();
@@ -138,4 +188,70 @@ void    irc::Channel::broadcast(const std::string& mes, const std::string& userN
         (*it_b)->write(mes);
         it_b++;
     }
+}
+
+/**
+ * @brief mode is added using string
+ * 
+ * @param string
+ * 
+ * @return nothing
+ */
+void    irc::Channel::setModeString(const std::string&m)
+{
+    switch(m[0])
+    {
+        case 'r':
+         _modes |= INV_ONLY;
+        case 't': 
+         _modes |= REST_TOPIC;
+        case 'k': 
+         _modes |= PRIVATE_KEY;
+        case 'o': 
+         _modes |= OPER_PRIVILEGE;
+        case 'l': 
+         _modes |= USER_LIMIT;
+    }
+}
+
+/**
+ * @brief mode is added outside the class 
+ * 
+ * @param mode type
+ * 
+ * @return nothing
+ */
+void    irc::Channel::setMode(ChannelMode_t m)
+{
+    _modes |= m;
+}
+
+/**
+ * @brief Invites the user to a channel
+ * 
+ * @param target the user who will invite the channel
+ * 
+ * @return nothing
+ */
+void    irc::Channel::invite(irc::User* user)
+{
+    this->broadcast(RPL_JOIN(user->getPrefix(), this->getName()));
+    this->addUser(user);
+
+    std::string message = user->getNickName() + " was invated to the channel ";
+    Log(message);
+}
+
+void    irc::Channel::mode(ChannelMode_t m)
+{
+    if (m & INV_ONLY)
+        _modes |= INV_ONLY;
+    if (m & REST_TOPIC)
+        _modes |= REST_TOPIC;
+    if (m & PRIVATE_KEY)
+        _modes |= PRIVATE_KEY;
+    if (m & OPER_PRIVILEGE)
+        _modes |= OPER_PRIVILEGE;
+    if (m & USER_LIMIT)
+        _modes |= USER_LIMIT;
 }
