@@ -12,7 +12,7 @@ size_t              irc::Channel::getLimit() const { return _limitMember; }
 bool                irc::Channel::getExtMsg() const { return _flag; }
 size_t              irc::Channel::getSize() const { return _userVector.size(); }
 int                 irc::Channel::getMode() const { return _modes; }
-
+const std::string&  irc::Channel::getKey() const { return _key; }
 /**
  * @brief By filtering the vectors of the users, find the nickname and fill them in other vector.
  * 

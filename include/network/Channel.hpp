@@ -3,7 +3,6 @@
 
 # include "irc.hpp"
 
-
 # include "User.hpp"
 
 namespace irc
@@ -12,17 +11,17 @@ namespace irc
 
     class Channel
     {
-       public:
-          enum ChannelMode_t
-		    	{
-		    		INV_ONLY	    	= 1,
-		    		REST_TOPIC    	= 2, //DONE
-		    		PRIVATE_KEY	  	= 4, //DONE
-		    		OPER_PRIVILEGE	= 8,
-            USER_LIMIT      = 16
-		    	};
+        public:
+            enum ChannelMode_t
+            {
+                INV_ONLY        = 1,
+                REST_TOPIC      = 2, //DONE
+                PRIVATE_KEY     = 4, //DONE
+                OPER_PRIVILEGE  = 8,
+                USER_LIMIT      = 16
+            };
 
-           typedef std::vector<User *>::const_iterator userIter;
+        typedef std::vector<User *>::const_iterator userIter;
 
         public:
             Channel(const std::string &name, const std::string &key, User* admin);
@@ -48,6 +47,7 @@ namespace irc
             size_t                      getSize() const;
             std::vector<std::string>    getNickNames() const;
             int                         getMode() const;
+            const std::string&          getKey() const;
 
             void removeTopic(const std::string&);
             void removeKey();

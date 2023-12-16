@@ -187,7 +187,6 @@ void	irc::Server::onUserDisconnect(int fd)
 	{
 		std::cout << "Error while disconnecting! " << e.what() << std::endl;
 	}
-	
 }
 
 /**
