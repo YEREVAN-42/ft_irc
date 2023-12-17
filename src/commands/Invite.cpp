@@ -42,5 +42,5 @@ void	irc::Invite::execute(User* user, const std::vector<std::string>& args)
         return;
     }
 
-	//there will be called channel member function for inviting user to channel
+	// channel->invite(dest);
 }
