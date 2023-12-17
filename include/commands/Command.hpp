@@ -138,6 +138,15 @@ namespace irc
 
 			virtual void	execute(User* user, const std::vector<std::string>& args);
 	};
+
+	class Quit : public Command
+	{
+		public:
+			Quit(Server *server, bool auth);
+			virtual ~Quit();
+
+			virtual void	execute(User* user, const std::vector<std::string>& args);
+	};
 }
 
 

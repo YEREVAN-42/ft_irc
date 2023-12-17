@@ -45,6 +45,9 @@ namespace irc
     inline const std::string  ERR_ALREADYREGISTERED(const std::string& source)
     { return std::string("462 " + source + " :You may not register"); }
 
+	inline const std::string ERR_UNKNOWNMODE(const std::string& c)
+	{ return std::string(c + " :is unknown mode char to me"); }
+
     inline const std::string  ERR_PASSWDMISMATCH(const std::string& source)
     { return std::string("464 " + source + " :Password is incorrect"); }
  
