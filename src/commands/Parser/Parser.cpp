@@ -4,6 +4,7 @@ irc::Parser::Parser(Server* server)
 	: _server(server)
 {
 	_commands["PASS"]   = new Pass(_server, false);
+	_commands["QUIT"]   = new Quit(_server, false);
 	_commands["NICK"]   = new Nick(_server, false);
 	_commands["USER"]   = new UserCom(_server, false);
 
