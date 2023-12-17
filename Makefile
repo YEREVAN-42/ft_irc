@@ -22,7 +22,7 @@ COMPILING=$(_BLUE)COMPILING$(NC)
 CXX = c++
 
 # Compiler flags
-CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 LDFLAGS  :=
 
 # UNIX-based OS variables & settings

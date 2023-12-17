@@ -304,7 +304,7 @@ void	irc::Server::start()
 
 			if ((c_it->revents & POLLHUP) == POLLHUP)
 			{
-				this->onUserDisconnect(c_it->fd);
+				// this->onUserDisconnect(c_it->fd);
 				break ;
 			}
 
