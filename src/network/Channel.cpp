@@ -13,6 +13,7 @@ bool                irc::Channel::getExtMsg() const { return _flag; }
 size_t              irc::Channel::getSize() const { return _userVector.size(); }
 int                 irc::Channel::getMode() const { return _modes; }
 const std::string&  irc::Channel::getKey() const { return _key; }
+
 /**
  * @brief By filtering the vectors of the users, find the nickname and fill them in other vector.
  * 
@@ -34,8 +35,20 @@ std::vector<std::string>    irc::Channel::getNickNames() const
     return nickVector;
 }
 
-void    irc::Channel::setLimit(size_t limit) { _limitMember = limit; }
 void    irc::Channel::setExtMsg(bool flag) { _flag = flag; }
+
+void    irc::Channel::setLimit(size_t limit)
+{
+    if (_modes & USER_LIMIT)
+        _limitMember = limit;
+}
+
+void irc::Channel::removeLimit()
+{
+    if (_modes & USER_LIMIT)
+        _limitMember = MAX_LIMIT;
+}
+
 void    irc::Channel::setKey(const std::string& key)
 {
     std::string message = NULL;
@@ -90,9 +103,9 @@ void irc::Channel::removeTopic(const std::string& topic)
 
 /**
  * @brief Eject(remove) a user from the channel
- * 
+ *
  * @param user the user to remove, target the user from whose channel user should be removed, the reason for removal
- * 
+ *
  * @return nothing
  */
 void    irc::Channel::kick(irc::User* user, irc::User* target, const std::string& reason)
@@ -106,21 +119,51 @@ void    irc::Channel::kick(irc::User* user, irc::User* target, const std::string
 
 /**
  * @brief Adds user to the vector
- * 
+ *
  * @param pointer of the user
- * 
+ *
  * @return nothing
  */
 void    irc::Channel::addUser(irc::User* puser)
 {
+    if (_modes & INV_ONLY)
+        return ;
+    if (_userVector.empty())
+        giveOperator(puser);
     _userVector.push_back(puser);
 }
 
 /**
- * @brief Deletes the given user from the vector
- * 
+ * @brief deprive the operator of the position
+ *
  * @param pointer of the user
- * 
+ *
+ * @return nothing
+ */
+void irc::Channel::takeOperator(User* puser)
+{
+    if (_modes & OPER_PRIVILEGE)
+        puser->setPrivilege(false);
+}
+
+/**
+ * @brief gives the user an operator role
+ *
+ * @param pointer of the user
+ *
+ * @return nothing
+ */
+void irc::Channel::giveOperator(User* puser)
+{
+    if (_modes & OPER_PRIVILEGE)
+        puser->setPrivilege(true);
+}
+
+/**
+ * @brief Deletes the given user from the vector
+ *
+ * @param pointer of the user
+ *
  * @return nothing
  */
 void    irc::Channel::removeUser(irc::User* puser)
@@ -201,7 +244,7 @@ void    irc::Channel::setModeString(const std::string&m)
 {
     switch(m[0])
     {
-        case 'r':
+        case 'i':
          _modes |= INV_ONLY;
         case 't': 
          _modes |= REST_TOPIC;
