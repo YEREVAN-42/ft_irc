@@ -1,8 +1,9 @@
 #ifndef __Channel_hpp__
 # define __Channel_hpp__
 
-# include "irc.hpp"
+# define    MAX_LIMIT 65535
 
+# include "irc.hpp"
 # include "User.hpp"
 
 namespace irc
@@ -14,11 +15,11 @@ namespace irc
         public:
             enum ChannelMode_t
             {
-                INV_ONLY        = 1,
+                INV_ONLY        = 1, //DONE
                 REST_TOPIC      = 2, //DONE
                 PRIVATE_KEY     = 4, //DONE
-                OPER_PRIVILEGE  = 8,
-                USER_LIMIT      = 16
+                OPER_PRIVILEGE  = 8, //DONE
+                USER_LIMIT      = 16 //DONE
             };
 
         typedef std::vector<User *>::const_iterator userIter;
@@ -31,7 +32,6 @@ namespace irc
             void    kick(User*, User*, const std::string&);
             void    broadcast(const std::string&);
             void    broadcast(const std::string&, const std::string&);
-            void    invite(User*);
             void    mode(ChannelMode_t); // use mode(inv_only | rest_topic)
 
             void    setKey(const std::string&);
@@ -51,6 +51,10 @@ namespace irc
 
             void removeTopic(const std::string&);
             void removeKey();
+            void removeLimit();
+            void invite(User*);
+            void takeOperator(User*);
+            void giveOperator(User*);
 
         private:
             void setMode(ChannelMode_t);
