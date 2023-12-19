@@ -22,7 +22,7 @@ namespace irc
 			Command(Server *server, bool auth = false);
 			virtual ~Command();
 
-			virtual void execute(User* user, std::vector<std::string> args) = 0;
+			virtual void execute(User* user, const std::vector<std::string>& args) = 0;
 		public:
 			bool	authRequired() const;
 
@@ -37,7 +37,7 @@ namespace irc
 			Invite(Server *server);
 			virtual ~Invite();
 
-			virtual void    execute(User* user, std::vector<std::string> args);
+			virtual void    execute(User* user, const std::vector<std::string>& args);
 	};
 
 	class Join : public Command
@@ -46,7 +46,7 @@ namespace irc
 			Join(Server *server);
 			virtual ~Join();
 
-			virtual void    execute(User* user, std::vector<std::string> args);
+			virtual void    execute(User* user, const std::vector<std::string>& args);
 	};
 
 	class Kick : public Command
@@ -55,7 +55,7 @@ namespace irc
 			Kick(Server *server);
 			virtual ~Kick();
 
-			virtual void    execute(User* user, std::vector<std::string> args);
+			virtual void    execute(User* user, const std::vector<std::string>& args);
 	};
 
 	class Topic : public Command
@@ -64,7 +64,7 @@ namespace irc
 			Topic(Server *server);
 			virtual ~Topic();
 
-			// virtual void    execute(User* user, std::vector<std::string> args);
+			virtual void    execute(User* user, const std::vector<std::string>& args);
 	};
 
 	class Ping : public Command
@@ -73,7 +73,7 @@ namespace irc
 			Ping(Server *server);
 			virtual ~Ping();
 
-			virtual void	execute(User* user, std::vector<std::string> args);
+			virtual void	execute(User* user, const std::vector<std::string>& args);
 	};
 
 	class Pong : public Command
@@ -82,23 +82,17 @@ namespace irc
 			Pong(Server *server);
 			virtual ~Pong();
 
-			virtual void	execute(User* user, std::vector<std::string> args);
+			virtual void	execute(User* user, const std::vector<std::string>& args);
 	};
 
+	class PrivMsg : public Command
+	{
+		public:
+			PrivMsg(Server *server);
+			virtual ~PrivMsg();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+			virtual void	execute(User* user, const std::vector<std::string>& args);
+	};
 
 	class Pass : public Command
 	{
@@ -106,7 +100,7 @@ namespace irc
 			Pass(Server *server, bool auth);
 			virtual ~Pass();
 
-			virtual void	execute(User* user, std::vector<std::string> args);
+			virtual void	execute(User* user, const std::vector<std::string>& args);
 	};
 
 	class UserCom : public Command
@@ -115,7 +109,7 @@ namespace irc
 			UserCom(Server *server, bool auth);
 			virtual ~UserCom();
 
-			virtual void	execute(User* user, std::vector<std::string> args);
+			virtual void	execute(User* user, const std::vector<std::string>& args);
 	};
 
 	class Nick : public Command
@@ -124,7 +118,34 @@ namespace irc
 			Nick(Server *server, bool auth);
 			virtual ~Nick();
 
-			virtual void	execute(User* user, std::vector<std::string> args);
+			virtual void	execute(User* user, const std::vector<std::string>& args);
+	};
+
+	class Mode : public Command
+	{
+		public:
+			Mode(Server *server);
+			virtual ~Mode();
+
+			virtual void	execute(User* user, const std::vector<std::string>& args);
+	};
+
+	class Notice : public Command
+	{
+		public:
+			Notice(Server *server);
+			virtual ~Notice();
+
+			virtual void	execute(User* user, const std::vector<std::string>& args);
+	};
+
+	class Quit : public Command
+	{
+		public:
+			Quit(Server *server, bool auth);
+			virtual ~Quit();
+
+			virtual void	execute(User* user, const std::vector<std::string>& args);
 	};
 }
 

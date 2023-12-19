@@ -1,14 +1,22 @@
 #include "Parser.hpp"
 
 irc::Parser::Parser(Server* server)
+	: _server(server)
 {
-	_commands["PASS"]   = new Pass(server, false);
-	_commands["NICK"]   = new Nick(server, false);
-	_commands["USER"]   = new UserCom(server, false);
+	_commands["PASS"]   = new Pass(_server, false);
+	_commands["QUIT"]   = new Quit(_server, false);
+	_commands["NICK"]   = new Nick(_server, false);
+	_commands["USER"]   = new UserCom(_server, false);
 
-	_commands["JOIN"]   = new Join(server);
-	_commands["KICK"]   = new Kick(server);
-	_commands["INVITE"] = new Invite(server);
+	_commands["PING"]    = new Ping(_server);
+	_commands["PONG"]    = new Pong(_server);
+	_commands["JOIN"]    = new Join(_server);
+	_commands["KICK"]    = new Kick(_server);
+	_commands["MODE"]    = new Mode(_server);
+	_commands["TOPIC"]   = new Topic(_server);
+	_commands["INVITE"]  = new Invite(_server);
+	_commands["NOTICE"]  = new Notice(_server);
+	_commands["PRIVMSG"] = new PrivMsg(_server);
 }
 
 irc::Parser::~Parser()
@@ -58,12 +66,7 @@ std::string	irc::Parser::trim(const std::string& str, const char* WHITESPACE = "
 
 void	irc::Parser::invoke(User* user, const std::string& message)
 {
-	if (user->isRegistered() == false)
-	{
-		user->reply(ERR_NOTREGISTERED(user->getNickName()));
-		return ;
-	}
-
+	
 	std::stringstream	ss(message);
 	std::string 		syntax;
 
@@ -95,8 +98,8 @@ void	irc::Parser::invoke(User* user, const std::string& message)
 		}
 		catch(const std::exception& e)
 		{
-			(void)e;
 			user->reply(ERR_UNKNOWNCOMMAND(user->getNickName(), command));
 		}
 	}
+
 }

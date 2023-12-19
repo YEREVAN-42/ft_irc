@@ -10,7 +10,7 @@ _WHITE=	\033[1;37m
 _NC=	\033[0m
 
 # Colored messages
-SUCCESS=$(GREEN)SUCCESS$(NC)
+SUCCESS=$(_GREEN)SUCCESS$(NC)
 COMPILING=$(_BLUE)COMPILING$(NC)
 
 # #############################################################################
@@ -22,7 +22,7 @@ COMPILING=$(_BLUE)COMPILING$(NC)
 CXX = c++
 
 # Compiler flags
-CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -g3 -fsanitize=address
+CXXFLAGS := -Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
 LDFLAGS  :=
 
 # UNIX-based OS variables & settings
@@ -63,11 +63,11 @@ $(NAME): $(OBJ)
 	@echo "-----\nCreating Binary File $(_YELLOW)$@$(_WHITE) ... \c"
 	@$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 	@mv $(NAME) $(BIN)/
-	@echo "$(_GREEN)DONE$(_WHITE)\n-----"
+	@echo "$(SUCCESS)\n-----"
 
 # Rule to build object files
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCLUDE) Makefile
-	@echo "Compiling $(_YELLOW)$@$(_WHITE) ... \c"
+	@echo "$(COMPILING) $(_YELLOW)$@$(_WHITE) ... \c"
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CXXFLAGS) $(IFLAGS) -c $< -o $@
 	@echo "$(_GREEN)DONE$(_WHITE)"

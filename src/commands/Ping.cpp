@@ -5,7 +5,7 @@ irc::Ping::~Ping() {	}
 
 //	syntax: PING <server1> [<server2>]
 
-void	irc::Ping::execute(User* user, std::vector<std::string> args)
+void	irc::Ping::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.empty())
 	{

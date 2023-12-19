@@ -12,8 +12,8 @@
 
 namespace irc
 {
-	class Command;
 	class Server;
+	class Command;
 
 	class Parser
 	{
@@ -22,13 +22,27 @@ namespace irc
 			~Parser();
 
 			void	invoke(User*, const std::string&);
+			// std::ostream& operator<<(std::ostream& out)
+			// {
+			// 	std::map<const std::string, Command*>::const_iterator begin = _commands.begin();
+			// 	std::map<const std::string, Command*>::const_iterator end = _commands.end();
+
+			// 	while (begin != end) {
+			// 		out << begin->first << std::endl;
+			// 		++begin;
+			// 	}
+
+			// 	return out;
+			// }
 
 		private:
 			static std::string	trim(const std::string&, const char*);
 
 		private:
+			Server*                               _server;
 			std::map<const std::string, Command*>	_commands;
 	};
 }
+
 
 #endif // __PARSER_HPP__

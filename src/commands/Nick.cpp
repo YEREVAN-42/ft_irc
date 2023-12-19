@@ -8,7 +8,7 @@ irc::Nick::~Nick()
 
 // syntax: NICK <nickname>
 
-void irc::Nick::execute(User* user, std::vector<std::string> args)
+void irc::Nick::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.empty() || args[0].empty())
 	{

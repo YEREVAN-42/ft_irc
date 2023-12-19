@@ -108,19 +108,17 @@ const std::string	irc::Server::readMessage(int fd) const
 
 	bzero(buffer, 100);
 
-	while (strstr(buffer, "\n") != NULL)
+	while (strstr(buffer, "\n") == NULL)
 	{
 		bzero(buffer, 100);
 
-		if (recv(fd, buffer, 100, 0) == -1 && \
-			errno != EWOULDBLOCK)
+		if (recv(fd, buffer, 100, 0) == -1 && errno != EWOULDBLOCK)
 		{
 			throw std::runtime_error("Error while reading buffer from a user!");
 		}
 
 		message.append(buffer);
 	}
-
 	return message;
 }
 
@@ -136,8 +134,9 @@ void	irc::Server::onUserMessage(int fd)
 	try
 	{
 		User* user = _users.at(fd);
+		const std::string msg = this->readMessage(fd);
 
-		_parser->invoke(user, this->readMessage(fd));
+		_parser->invoke(user, msg);
 	}
 	catch(const std::exception& e)
 	{
@@ -300,25 +299,21 @@ void	irc::Server::start()
 		{
 			if (c_it->revents == 0)
 			{
-				std::cout << 1 << std::endl;
 				continue ;
 			}
 
 			if ((c_it->revents & POLLHUP) == POLLHUP)
 			{
-				std::cout << 1 << std::endl;
-				this->onUserDisconnect(c_it->fd);
+				// this->onUserDisconnect(c_it->fd);
 				break ;
 			}
 
 			if (((c_it->revents & POLLIN) == POLLIN) &&\
 				_sock == c_it->fd)
 			{
-				std::cout << 1 << std::endl;
 				this->onUserConnect();
 				break ;
 			}
-			std::cout << 1 << std::endl;
 			this->onUserMessage(c_it->fd);
 
 		}

@@ -8,7 +8,7 @@ irc::Pass::~Pass()
 
 // syntax: PASS <password>
 
-void	irc::Pass::execute(User* user, std::vector<std::string> args)
+void	irc::Pass::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.empty())
 	{
@@ -22,7 +22,7 @@ void	irc::Pass::execute(User* user, std::vector<std::string> args)
 		return ;
 	}
 
-	if (this->_server->getPassword() == args[0].substr((args[0][0] == ':') ? 1 : 0))
+	if (this->_server->getPassword() != args[0].substr((args[0][0] == ':') ? 1 : 0))
 	{
 		user->reply(ERR_PASSWDMISMATCH(user->getNickName()));
 		return ;
