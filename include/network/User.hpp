@@ -33,6 +33,8 @@ namespace irc
 			const std::string&	getHostName() const;
 			const std::string	getPrefix()   const;
 
+			bool getPrivilege() const;
+
 			Channel*	getChannel() const;
 
 			const UserState&	getState() const;
@@ -47,6 +49,7 @@ namespace irc
 			void	setNickName(const std::string& nickName);
 			void	setRealName(const std::string& realName);
 			void	setHostName(const std::string& hostName);
+			void    setPrivilege(bool state);
 
 			//	-------------------------------------------
 
@@ -67,6 +70,8 @@ namespace irc
 			std::string	_userName;
 			std::string	_nickName;
 			std::string	_realName;
+
+			bool		_privilege;
 
 			UserState		_state;
 			Channel*		_channel;

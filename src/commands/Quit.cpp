@@ -9,14 +9,15 @@ irc::Quit::~Quit() {}
 void    irc::Quit::execute(User* user, const std::vector<std::string>& args)
 {
 	std::string reason;
+
 	if (args.empty())
     	reason = "Leaving...";
 	else
 		reason = args[0];
 
-    if (reason[0] == ':')
-        reason = reason.substr(1);
+	if (reason[0] == ':')
+		reason = reason.substr(1);
 
-    user->write(RPL_QUIT(user->getPrefix(), reason));
+  user->write(RPL_QUIT(user->getPrefix(), reason));
 	_server->onUserDisconnect(user->getFd());
 }

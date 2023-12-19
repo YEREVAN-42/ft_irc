@@ -2,7 +2,7 @@
 
 irc::User::~User() {	}
 irc::User::User(int fd, int port, const std::string& host)
-	: _fd(fd), _port(port), _hostName(host), _channel(NULL)
+	: _fd(fd), _port(port), _hostName(host), _privilege(false), _channel(NULL)
 {	}
 
 int	irc::User::getFd()   const { return _fd; }
@@ -10,10 +10,13 @@ int	irc::User::getPort() const { return _port; }
 
 const irc::User::UserState&	irc::User::getState() const { return _state; }
 
+bool irc::User::getPrivilege() const { return _privilege; }
+
 const std::string&	irc::User::getUserName() const { return _userName; }
 const std::string&	irc::User::getNickName() const { return _nickName; }
 const std::string&	irc::User::getRealName() const { return _realName; }
 const std::string&	irc::User::getHostName() const { return _hostName; }
+
 irc::Channel*	irc::User::getChannel()  const { return _channel;  }
 
 bool				irc::User::isRegistered() const { return _state == REGISTERED; }
@@ -42,10 +45,13 @@ void	irc::User::setPort(int port) { _port = port; }
 void	irc::User::setChannel(Channel* channel) { _channel = channel; }
 void	irc::User::setState(const UserState& state) { _state = state; }
 
+void	irc::User::setPrivilege(bool state) { _privilege = state; }
+
 void	irc::User::setUserName(const std::string& userName) { _userName = userName; }
 void	irc::User::setNickName(const std::string& nickName) { _nickName = nickName; }
 void	irc::User::setRealName(const std::string& realName) { _realName = realName; }
 void	irc::User::setHostName(const std::string& hostName) { _hostName = hostName; }
+
 
 /**
  * @brief	By following the special irc-syntax,
