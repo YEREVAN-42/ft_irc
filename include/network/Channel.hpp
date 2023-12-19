@@ -22,7 +22,8 @@ namespace irc
                 USER_LIMIT      = 16 //DONE
             };
 
-        typedef std::vector<User *>::const_iterator userIter;
+        typedef std::vector<User *>::iterator userIter;
+        typedef std::vector<User *>::const_iterator userConstIter;
 
         public:
             Channel(const std::string &name, const std::string &key, User* admin);
