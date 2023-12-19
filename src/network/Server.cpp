@@ -139,9 +139,7 @@ void	irc::Server::onUserMessage(int fd)
 		_parser->invoke(user, msg);
 	}
 	catch(const std::exception& e)
-	{
-		std::cout << "Error while handling the client message! " << e.what() << std::endl;
-	}
+	{	}
 	
 }
 
@@ -295,26 +293,31 @@ void	irc::Server::start()
 			throw std::runtime_error("Error while polling from fd!");
 		}
 
-		for (pfd_const_iterator c_it = _pfds.begin(); c_it != _pfds.end(); ++c_it)
+		for (pfd_iterator it = _pfds.begin(); it != _pfds.end(); ++it)
 		{
-			if (c_it->revents == 0)
+			if (it->revents == 0)
 			{
 				continue ;
 			}
 
-			if ((c_it->revents & POLLHUP) == POLLHUP)
+			if ((it->revents & POLLHUP) == POLLHUP)
 			{
-				// this->onUserDisconnect(c_it->fd);
+				// this->onUserDisconnect(it->fd);
 				break ;
 			}
 
-			if (((c_it->revents & POLLIN) == POLLIN) &&\
-				_sock == c_it->fd)
+			if ((it->revents & POLLIN) == POLLIN)
 			{
-				this->onUserConnect();
-				break ;
+				if (_sock == it->fd)
+				{
+					this->onUserConnect();
+					break ;
+				}
+				else
+				{
+					this->onUserMessage(it->fd);
+				}
 			}
-			this->onUserMessage(c_it->fd);
 
 		}
 	}

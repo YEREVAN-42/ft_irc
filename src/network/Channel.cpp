@@ -6,13 +6,13 @@ irc::Channel::Channel(const std::string &n, const std::string &k, irc::User* a)
 
 irc::Channel::~Channel(){}
 
-const std::string&	irc::Channel::getName() const { return _name; }
-irc::User*          irc::Channel::getAdmin() const { return _admin; }
-size_t              irc::Channel::getLimit() const { return _limitMember; }
+const std::string&  irc::Channel::getKey()    const { return _key; }
+const std::string&	irc::Channel::getName()   const { return _name; }
 bool                irc::Channel::getExtMsg() const { return _flag; }
-size_t              irc::Channel::getSize() const { return _userVector.size(); }
-int                 irc::Channel::getMode() const { return _modes; }
-const std::string&  irc::Channel::getKey() const { return _key; }
+irc::User*          irc::Channel::getAdmin()  const { return _admin; }
+int                 irc::Channel::getMode()   const { return _modes; }
+size_t              irc::Channel::getLimit()  const { return _limitMember; }
+size_t              irc::Channel::getSize()   const { return _userVector.size(); }
 
 /**
  * @brief By filtering the vectors of the users, find the nickname and fill them in other vector.
@@ -25,7 +25,7 @@ std::vector<std::string>    irc::Channel::getNickNames() const
 {
     std::vector<std::string> nickVector;
 
-    for (userIter it = _userVector.begin(); it != _userVector.end(); ++it)
+    for (userConstIter it = _userVector.begin(); it != _userVector.end(); ++it)
     {
         const irc::User* user = *it;
         std::string nickname = (user == _admin ? "@" : "") + user->getNickName();
@@ -213,8 +213,8 @@ void    irc::Channel::removeUser(irc::User* puser)
  */
 void    irc::Channel::broadcast(const std::string& mes)
 {
-    userIter it_b = _userVector.begin();
-    userIter it_e = _userVector.end();
+    userConstIter it_b = _userVector.begin();
+    userConstIter it_e = _userVector.end();
 
     while (it_b != it_e)
     {
@@ -232,8 +232,8 @@ void    irc::Channel::broadcast(const std::string& mes)
  */
 void    irc::Channel::broadcast(const std::string& mes, const std::string& userName)
 {
-    userIter it_b = _userVector.begin();
-    userIter it_e = _userVector.end();
+    userConstIter it_b = _userVector.begin();
+    userConstIter it_e = _userVector.end();
 
     while (it_b != it_e)
     {
@@ -260,14 +260,19 @@ void    irc::Channel::setModeString(const std::string& m)
     {
         case 'i':
          _modes |= INV_ONLY;
+         break ;
         case 't': 
          _modes |= REST_TOPIC;
+         break ;
         case 'k': 
          _modes |= PRIVATE_KEY;
+         break ;
         case 'o': 
          _modes |= OPER_PRIVILEGE;
+         break ;
         case 'l': 
          _modes |= USER_LIMIT;
+         break ;
     }
 }
 
@@ -292,7 +297,6 @@ void    irc::Channel::setMode(ChannelMode_t m)
  */
 void    irc::Channel::invite(irc::User* user)
 {
-    this->broadcast(RPL_JOIN(user->getPrefix(), this->getName()));
     user->join(this);
 
     std::string message = user->getNickName() + " was invated to the channel ";

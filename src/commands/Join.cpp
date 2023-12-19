@@ -52,6 +52,12 @@ void    irc::Join::execute(User* user, const std::vector<std::string>& args)
 		return;
 	}
 
+	if (channel->getMode() & Channel::INV_ONLY)
+	{
+		user->reply(ERR_INVITEONLYCHAN(user->getNickName(), channel->getName()));
+		return ;
+	}
+
 	user->join(channel);
 
 }

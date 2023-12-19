@@ -63,6 +63,9 @@ namespace irc
     inline const std::string  ERR_NEEDMOREPARAMS(const std::string& source, const std::string& command)
     { return std::string("461 " + source + " " + command + " :Not enough parameters"); }
 
+    inline const std::string  ERR_TOOMENYPARAMS(const std::string& source, const std::string& command)
+    { return std::string("461 " + source + " " + command + " :too many parameters"); }
+
     inline const std::string  ERR_TOOMANYCHANNELS(const std::string& source, const std::string& channel)
     { return std::string("405 " + source + " " + channel + " :You have joined too many channels"); }
 
@@ -93,6 +96,9 @@ namespace irc
 
     inline const std::string  ERR_USERNOTINCHANNEL(const std::string& source, const std::string& nickname, const std::string& channel)
     { return std::string("441 " + source + " " + nickname + " " + channel + " :They aren't on that channel"); }
+
+    inline const std::string  ERR_INVITEONLYCHAN(const std::string& nickname, const std::string& channel)
+    { return std::string("473 " + nickname + " " + channel + " :Cannot join channel (+i)"); }
 
     /* Numeric Responses */
 
