@@ -39,6 +39,7 @@ namespace irc
             void    setExtMsg(bool);
             void    setModeString(const std::string&);
             void    setTopic(const std::string&);
+            void    reSetTopic(const std::string&);
 
             const std::string&          getName() const;
             User*                       getAdmin() const;
@@ -49,7 +50,7 @@ namespace irc
             int                         getMode() const;
             const std::string&          getKey() const;
 
-            void removeTopic(const std::string&);
+            void removeTopic();
             void removeKey();
             void removeLimit();
             void invite(User*);

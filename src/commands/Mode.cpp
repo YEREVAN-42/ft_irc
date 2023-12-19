@@ -27,23 +27,24 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
         	return;
 	}
 
-	// std::size_t found = args[2].find_first_not_of("itkol ");
+	std::size_t found = args[2].find_first_not_of("-itkol");
 
-	// if (found != std::string::npos)
-	// 	user->reply(ERR_UNKNOWNMODE(m));
+	if (found != std::string::npos)
+		user->reply(ERR_UNKNOWNMODE(args[2]));
 
-	//  while(args[2][i])
-	//  {
-	// 	if (args[2][i] == 'i')
-	// 		channel->mode(INV_ONLY);
-	// 	else if (args[2][i] == 't')
-	// 		channel->mode(REST_TOPIC);
-	// 	else if (args[2][i] == 'k')
-	// 		channel->mode(PRIVATE_KEY);
-	// 	else if (args[2][i] == 'o')
-	// 		channel->mode(OPER_PRIVILEGE);
-	// 	else if (args[2][i] == 'l')
-	// 		channel->mode(USER_LIMIT);
-	// 	i++;
-	//  }
+	int i = 0;
+	while(args[2][i])
+	{
+		if (args[2][i] == 'i')
+			channel->mode(Channel::INV_ONLY);
+		else if (args[2][i] == 't')
+			channel->mode(Channel::REST_TOPIC);
+		else if (args[2][i] == 'k')
+			channel->mode(Channel::PRIVATE_KEY);
+		else if (args[2][i] == 'o')
+			channel->mode(Channel::OPER_PRIVILEGE);
+		else if (args[2][i] == 'l')
+			channel->mode(Channel::USER_LIMIT);
+		++i;
+	}
 }
