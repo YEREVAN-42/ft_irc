@@ -42,5 +42,5 @@ void	irc::Invite::execute(User* user, const std::vector<std::string>& args)
         return;
     }
 
-	// channel->invite(dest);
+	channel->invite(dest);
 }
