@@ -12,62 +12,61 @@ void	irc::PrivMsg::execute(User* user, const std::vector<std::string>& args)
         user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "PRIVMSG"));
         return;
 	}
+	std::string receiver = args.at(0);
+	std::string message = "";
 
-		std::string receiver = args.at(0);
-		std::string message;
+	std::vector<std::string>::const_iterator first = args.begin() + 1;
+	std::vector<std::string>::const_iterator last = args.end();
 
-		std::vector<std::string>::const_iterator first = args.begin() + 1;
-		std::vector<std::string>::const_iterator last = args.end();
+	while (first != last)
+	{
+		message.append(*first + ' ');
+		++first;
+	}
 
-		while (first != last)
+	if (message.at(0) == ':')
+    message = message.substr(1);
+
+	if (receiver.at(0) == '#')
+	{
+		Channel* channel = user->getChannel();
+
+		if(!channel)
 		{
-			message.append(*first, ' ');
-			++first;
+			user->reply(ERR_NOSUCHCHANNEL(user->getNickName(), receiver));
+			return;
 		}
-
-		if (message.at(0) == ':')
-        	message = message.substr(1);
 		
-		if (message.at(0) == '#')
+		if (!channel->getExtMsg())
 		{
-			Channel* channel = user->getChannel();
+			std::vector<std::string> nicknames = channel->getNickNames();
 
-			if(!channel)
+			std::vector<std::string>::iterator first = nicknames.begin();
+			std::vector<std::string>::iterator last = nicknames.end();
+
+			while (first != last)
 			{
-				user->reply(ERR_NOSUCHCHANNEL(user->getNickName(), receiver));
+				if (*first == user->getNickName())
+					break;
+				first++;
+			}
+
+			if (first == last)
+			{
+				user->reply(ERR_CANNOTSENDTOCHAN(user->getNickName(), receiver));
 				return;
 			}
-
-			if (!channel->getExtMsg())
-			{
-				std::vector<std::string> nicknames = channel->getNickNames();
-
-				std::vector<std::string>::iterator first = nicknames.begin();
-				std::vector<std::string>::iterator last = nicknames.end();
-
-				while (first != last)
-				{
-					if (*first == user->getNickName())
-						break;
-					first++;
-				}
-
-				if (first == last)
-				{
-					user->reply(ERR_CANNOTSENDTOCHAN(user->getNickName(), receiver));
-					return;
-				}
-			}
-			channel->broadcast(RPL_PRIVMSG(user->getPrefix(), receiver, message), user->getNickName());
-        	return;
 		}
+			channel->broadcast(RPL_PRIVMSG(user->getPrefix(), receiver, message), user->getNickName());
+    	return;
+	}
 	
 	User  *dest = _server->getUser(receiver);
-    if (!dest)
-    {
-        user->reply(ERR_NOSUCHNICK(user->getNickName(), receiver));
+  if (!dest)
+  {
+    user->reply(ERR_NOSUCHNICK(user->getNickName(), receiver));
 		return;
-    }
+  }
 
-    dest->write(RPL_PRIVMSG(user->getPrefix(), receiver, message));
+  dest->write(RPL_PRIVMSG(user->getPrefix(), receiver, message));
 }

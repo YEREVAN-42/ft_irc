@@ -143,7 +143,7 @@ namespace irc
         time(&rawtime);
         timeinfo = localtime(&rawtime);
 
-        strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
+        strftime(buffer, sizeof(buffer), "[%d-%m-%Y %H:%M:%S] ", timeinfo);
         std::string str(buffer);
 
         std::cout << BOLDBLUE << str << RESET;

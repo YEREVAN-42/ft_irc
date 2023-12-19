@@ -16,41 +16,42 @@ irc::Join::~Join(){}
 
 void    irc::Join::execute(User* user, const std::vector<std::string>& args)
 {
-    if (args.empty())
-    {
-        user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "JOIN"));
-        return;
-    }
+	if (args.empty())
+	{
+		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "JOIN"));
+		return;
+	}
 
-    std::string user_name = args[0];
+	std::string user_name = args[0];
 	std::string pass;
 	if (args.size() > 1)
 		pass = args[1];
 	else
 		pass = "";
 
-    Channel *channel = user->getChannel();
+  Channel *channel = user->getChannel();
 	if (channel) 
-    {
+  {
 		user->reply(ERR_TOOMANYCHANNELS(user->getNickName(), user_name));
 		return;
 	}
 
-    channel = _server->getChannel(user_name);
+  channel = _server->getChannel(user_name);
 	if (!channel)
 		channel = _server->createChannel(user_name, pass, user);
 
-    if (channel->getLimit() > 0 && channel->getSize() >= channel->getLimit())
-    {
+  if (channel->getLimit() > 0 && channel->getSize() >= channel->getLimit())
+  {
 		user->reply(ERR_CHANNELISFULL(user->getNickName(), user_name));
 		return;
 	}
 
-    if (channel->getKey() != pass)
-    {
+  if (channel->getKey() != pass)
+  {
 		user->reply(ERR_BADCHANNELKEY(user->getNickName(), user_name));
 		return;
 	}
 
 	user->join(channel);
+
 }

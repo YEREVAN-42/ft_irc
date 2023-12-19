@@ -7,7 +7,7 @@ irc::Channel::Channel(const std::string &n, const std::string &k, irc::User* a)
 irc::Channel::~Channel(){}
 
 const std::string&	irc::Channel::getName() const { return _name; }
-irc::User* irc::Channel::getAdmin() const { return _admin; }
+irc::User*          irc::Channel::getAdmin() const { return _admin; }
 size_t              irc::Channel::getLimit() const { return _limitMember; }
 bool                irc::Channel::getExtMsg() const { return _flag; }
 size_t              irc::Channel::getSize() const { return _userVector.size(); }
@@ -23,15 +23,15 @@ const std::string&  irc::Channel::getKey() const { return _key; }
  */
 std::vector<std::string>    irc::Channel::getNickNames() const
 {
-    std::vector<std::string>    nickVector;
-    userIter                    it_b = _userVector.begin();
-    userIter                    it_e = _userVector.end();
+    std::vector<std::string> nickVector;
 
-    for (const irc::User* user = *it_b; it_b != it_e; ++it_b)
+    for (userIter it = _userVector.begin(); it != _userVector.end(); ++it)
     {
+        const irc::User* user = *it;
         std::string nickname = (user == _admin ? "@" : "") + user->getNickName();
         nickVector.push_back(nickname);
     }
+
     return nickVector;
 }
 
@@ -77,9 +77,23 @@ void irc::Channel::removeKey()
 
 void irc::Channel::setTopic(const std::string& topic)
 {
-   std::string message = NULL;
-   if (_modes & REST_TOPIC)
+    std::string message = "";
+    if (_modes & REST_TOPIC)
     {
+        _topic = topic;
+        message =  _name + " channel topic is set.";
+    }
+    else
+        message = "You cannot set " + _name + "  channel topic in the current mode.";
+    Log(message);
+}
+
+void irc::Channel::reSetTopic(const std::string& topic)
+{
+    std::string message = "";
+    if (_modes & REST_TOPIC)
+    {
+        this->removeTopic();
         _topic = topic;
         message =  _name + " channel topic chenged.";
     }
@@ -88,12 +102,12 @@ void irc::Channel::setTopic(const std::string& topic)
     Log(message);
 }
 
-void irc::Channel::removeTopic(const std::string& topic)
+void irc::Channel::removeTopic()
 {
-  std::string message = NULL;
-   if (_modes & REST_TOPIC)
+    std::string message = "";
+    if (_modes & REST_TOPIC)
     {
-        _topic = topic;
+        _topic = "";
         message =  _name + " channel topic removed.";
     }
     else
@@ -111,7 +125,7 @@ void irc::Channel::removeTopic(const std::string& topic)
 void    irc::Channel::kick(irc::User* user, irc::User* target, const std::string& reason)
 {
     this->broadcast(RPL_KICK(user->getPrefix(), _name, target->getNickName(), reason));
-    this->removeUser(target);
+    target->leave();
 
     std::string message = user->getNickName() + " kicked " + target->getNickName() + " from channel " + _name;
     Log(message);
@@ -240,7 +254,7 @@ void    irc::Channel::broadcast(const std::string& mes, const std::string& userN
  * 
  * @return nothing
  */
-void    irc::Channel::setModeString(const std::string&m)
+void    irc::Channel::setModeString(const std::string& m)
 {
     switch(m[0])
     {
@@ -279,7 +293,7 @@ void    irc::Channel::setMode(ChannelMode_t m)
 void    irc::Channel::invite(irc::User* user)
 {
     this->broadcast(RPL_JOIN(user->getPrefix(), this->getName()));
-    this->addUser(user);
+    user->join(this);
 
     std::string message = user->getNickName() + " was invated to the channel ";
     Log(message);

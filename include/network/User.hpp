@@ -49,7 +49,7 @@ namespace irc
 			void	setNickName(const std::string& nickName);
 			void	setRealName(const std::string& realName);
 			void	setHostName(const std::string& hostName);
-			void    setPrivilege(bool state);
+			void	setPrivilege(bool state);
 
 			//	-------------------------------------------
 
