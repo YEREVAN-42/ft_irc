@@ -12,7 +12,7 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		return;
 	}
 
-	if (args.size() > 2)
+	if (args.size() > 3)
 	{
 		user->reply(ERR_TOOMENYPARAMS(user->getNickName(), "MODE"));
 		return;
@@ -34,6 +34,7 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
     return;
 	}
 
+	
 	std::size_t found = args[1].find_first_not_of("+-itkol");
 
 	if (found != std::string::npos || (args[1][0] != '-' && args[1][0] != '+'))
@@ -48,6 +49,27 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 			flags += args[1][i];
 		}
 	}
+
+	//stexic heto petq a stugel ka errord argument te che u ete ka vor flagi het a vorovhetev kaxvac dranic tarber baner petq a ani
+	//orinak senc------ MODE #Finnish +o Kilroy(es depqum petq a es Kilroy-in admini privilegia ta, minusi depqum el de hakaraky)
+	//kam senc------ MODE #eu-opers +l 10(es depqum vonc haskanum em petq a limity darcni 10)
+	//kam daje senc------ MODE #42 +k oulu(es depqum el channel-i passwordy darncni oulu)
+	// std::string	user_name;
+	// if (args.size() == 3)
+	// 	user_name = args[2];
+
+	// User *dest = _server->getUser(user_name);
+    // if (!dest)
+    // {
+    //     user->reply(ERR_NOSUCHNICK(user->getNickName(), user_name));
+    //     return;
+    // }
+
+    // if (!dest->getChannel() || dest->getChannel() != channel)
+    // {
+    //     user->reply(ERR_USERNOTINCHANNEL(user->getNickName(), dest->getNickName(), user_name));
+    //     return;
+    // }
 
 	if (args[1][0] == '+')
 	{
@@ -76,7 +98,7 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 			++i;
 		} 
 	}
-	else
+	else if (args[1][0] == '-')
 	{
 		int i = 0;
 		while(flags[i])
