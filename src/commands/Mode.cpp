@@ -36,8 +36,8 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 
 	std::size_t found = args[1].find_first_not_of("+-itkol");
 
-	if (found != std::string::npos || args[1][0] != '-' || args[1][0] != '+')
-		user->reply(ERR_UNKNOWNMODE(args[2]));
+	if (found != std::string::npos || (args[1][0] != '-' && args[1][0] != '+'))
+		user->reply(ERR_UNKNOWNMODE(args[1]));
 
 	std::string flags = "";
 
@@ -49,11 +49,12 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		}
 	}
 
-	int i = 0;
 	if (args[1][0] == '+')
 	{
+		int i = 0;
 		while(flags[i])
 		{
+			std::cout << flags[i] << std::endl;
 			switch (flags[i])
 			{
 				case 'i':
@@ -77,6 +78,7 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 	}
 	else
 	{
+		int i = 0;
 		while(flags[i])
 		{
 			switch (flags[i])
