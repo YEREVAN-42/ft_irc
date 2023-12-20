@@ -305,14 +305,14 @@ void    irc::Channel::invite(irc::User* user)
 
 void    irc::Channel::mode(ChannelMode_t m)
 {
-    if (m & INV_ONLY)
-        _modes |= INV_ONLY;
-    if (m & REST_TOPIC)
-        _modes |= REST_TOPIC;
-    if (m & PRIVATE_KEY)
-        _modes |= PRIVATE_KEY;
-    if (m & OPER_PRIVILEGE)
-        _modes |= OPER_PRIVILEGE;
-    if (m & USER_LIMIT)
-        _modes |= USER_LIMIT;
+	if (m & INV_ONLY)
+		_modes |= INV_ONLY;
+	if (m & REST_TOPIC)
+		_modes |= REST_TOPIC;
+	if (m & PRIVATE_KEY)
+		_modes |= PRIVATE_KEY;
+	if (m & OPER_PRIVILEGE)
+		_modes |= OPER_PRIVILEGE;
+	if (m & USER_LIMIT)
+		_modes |= USER_LIMIT;
 }

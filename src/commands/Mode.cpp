@@ -34,9 +34,9 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
     return;
 	}
 
-	std::size_t found = args[1].find_first_not_of("-itkol");
+	std::size_t found = args[1].find_first_not_of("+-itkol");
 
-	if (found != std::string::npos || args[1][0] != '-')
+	if (found != std::string::npos || args[1][0] != '-' || args[1][0] != '+')
 		user->reply(ERR_UNKNOWNMODE(args[2]));
 
 	std::string flags = "";
@@ -50,26 +50,54 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 	}
 
 	int i = 0;
-	while(flags[i])
+	if (args[1][0] == '+')
 	{
-		switch (flags[i])
+		while(flags[i])
 		{
-			case 'i':
-				channel->mode(Channel::INV_ONLY);
-				break ;
-			case 't':
-				channel->mode(Channel::REST_TOPIC);
-				break ;
-			case 'k':
-				channel->mode(Channel::PRIVATE_KEY);
-				break ;
-			case 'o':
-				channel->mode(Channel::OPER_PRIVILEGE);
-				break ;
-			case 'l':
-				channel->mode(Channel::USER_LIMIT);
-				break ;
-		}
-		++i;
+			switch (flags[i])
+			{
+				case 'i':
+					channel->mode(Channel::INV_ONLY);
+					break ;
+				case 't':
+					channel->mode(Channel::REST_TOPIC);
+					break ;
+				case 'k':
+					channel->mode(Channel::PRIVATE_KEY);
+					break ;
+				case 'o':
+					channel->mode(Channel::OPER_PRIVILEGE);
+					break ;
+				case 'l':
+					channel->mode(Channel::USER_LIMIT);
+					break ;
+			}
+			++i;
+		} 
+	}
+	else
+	{
+		while(flags[i])
+		{
+			switch (flags[i])
+			{
+				// case 'i':
+				// 	channel->removeInvMode();
+				// 	break ;
+				case 't':
+					channel->removeTopic();
+					break ;
+				case 'k':
+					channel->removeKey();
+					break ;
+				case 'o':
+					channel->takeOperator(user);
+					break ;
+				case 'l':
+					channel->removeLimit();
+					break ;
+			}
+			++i;
+		} 
 	}
 }
