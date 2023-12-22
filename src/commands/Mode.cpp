@@ -128,19 +128,19 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		switch (flag)
 		{
 			case 'i':
-				// channel->removeInvMode();	
+				channel->removeInvMode();
 				break ;
 			case 't':
-				// channel->removeTopicMode();
+				channel->removeTopicMode();
 				break ;
 			case 'k':
-				// channel->removeKeyMode();
+				channel->removeKeyMode();
 				break ;
 			case 'o':
 				// channel->takeOperator(dest);
 				break ;
 			case 'l':
-				// channel->removeLimitMode();
+				channel->removeLimitMode();
 				break ;
 		}
 	}

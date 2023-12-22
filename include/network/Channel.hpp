@@ -55,8 +55,13 @@ namespace irc
             void removeKey();
             void removeLimit();
             void invite(User*);
-            void takeOperator(User*);
             void giveOperator(User*);
+
+            void removeInvMode();
+            void removeTopicMode();
+            void removeKeyMode();
+            void takeOperator(User*);
+            void removeLimitMode();
 
         private:
             void setMode(ChannelMode_t);

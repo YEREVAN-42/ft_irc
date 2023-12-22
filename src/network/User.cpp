@@ -163,7 +163,6 @@ void	irc::User::join(Channel* channel)
 	Log(message);
 }
 
-
 /**
  * @brief	the user must leave the group
  * 			and send a message to all users that he is leaving

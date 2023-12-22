@@ -102,6 +102,26 @@ void irc::Channel::reSetTopic(const std::string& topic)
     Log(message);
 }
 
+void irc::Channel::removeInvMode()
+{
+    _modes ^= INV_ONLY;
+}
+
+void irc::Channel::removeTopicMode()
+{
+    _modes ^= REST_TOPIC;
+}
+
+void irc::Channel::removeKeyMode()
+{
+    _modes ^= PRIVATE_KEY;
+}
+
+void irc::Channel::removeLimitMode()
+{
+    _modes ^= USER_LIMIT;
+}
+
 void irc::Channel::removeTopic()
 {
     std::string message = "";
