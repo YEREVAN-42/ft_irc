@@ -38,9 +38,15 @@ void    irc::Join::execute(User* user, const std::vector<std::string>& args)
 
   channel = _server->getChannel(user_name);
 	if (!channel)
+	{
 		channel = _server->createChannel(user_name, pass, user);
+		if (args.size() > 1)
+		{
+			channel->setModeChar('k');
+		}
+	}
 
-  if (channel->getLimit() > 0 && channel->getSize() >= channel->getLimit())
+  if (channel->getLimit() > 0 && channel->getSize() == channel->getLimit())
   {
 		user->reply(ERR_CHANNELISFULL(user->getNickName(), user_name));
 		return;

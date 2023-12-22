@@ -138,6 +138,7 @@ void	irc::User::welcome()
  */
 void	irc::User::join(Channel* channel)
 {
+	channel->setModeChar('o');
 	channel->addUser(this);
 	_channel = channel;
 
@@ -161,7 +162,6 @@ void	irc::User::join(Channel* channel)
 	const std::string message = _nickName + " has joined to the channel " + channel->getName();
 	Log(message);
 }
-
 
 /**
  * @brief	the user must leave the group
