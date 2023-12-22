@@ -42,8 +42,8 @@ const std::string	irc::User::getPrefix()   const
 void	irc::User::setFd(int fd)     { _fd = fd; }
 void	irc::User::setPort(int port) { _port = port; }
 
-void	irc::User::setChannel(Channel* channel) { _channel = channel; }
 void	irc::User::setState(const UserState& state) { _state = state; }
+void	irc::User::setChannel(Channel* channel)     { _channel = channel; }
 
 void	irc::User::setPrivilege(bool state) { _privilege = state; }
 
