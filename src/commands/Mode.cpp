@@ -12,7 +12,7 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		return;
 	}
 
-	if (args.size() > 2)
+	if (args.size() > 3)
 	{
 		user->reply(ERR_TOOMENYPARAMS(user->getNickName(), "MODE"));
 		return;
@@ -24,20 +24,21 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 
 	if (!channel)
 	{
-    user->reply(ERR_NOSUCHCHANNEL(user->getNickName(), channel_name));
-    return;
+		user->reply(ERR_NOSUCHCHANNEL(user->getNickName(), channel_name));
+		return;
 	}
 
 	if (channel->getAdmin() != user)
 	{
-    user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
-    return;
+		user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
+		return;
 	}
 
-	std::size_t found = args[1].find_first_not_of("-itkol");
+	
+	std::size_t found = args[1].find_first_not_of("+-itkol");
 
-	if (found != std::string::npos || args[1][0] != '-')
-		user->reply(ERR_UNKNOWNMODE(args[2]));
+	if (found != std::string::npos || (args[1][0] != '-' && args[1][0] != '+'))
+		user->reply(ERR_UNKNOWNMODE(args[1]));
 
 	std::string flags = "";
 
@@ -49,27 +50,100 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		}
 	}
 
-	int i = 0;
-	while(flags[i])
+	//stexic heto petq a stugel ka errord argument te che u ete ka vor flagi het a vorovhetev kaxvac dranic tarber baner petq a ani
+	//orinak senc------ MODE #Finnish +o Kilroy(es depqum petq a es Kilroy-in admini privilegia ta, minusi depqum el de hakaraky)
+	//kam senc------ MODE #eu-opers +l 10(es depqum vonc haskanum em petq a limity darcni 10)
+	//kam daje senc------ MODE #42 +k oulu(es depqum el channel-i passwordy darcni oulu)
+	User *dest;
+	if (args.size() == 3 && args[1][1] == 'o')
 	{
-		switch (flags[i])
+		_user_name = args[2];
+
+		dest = _server->getUser(_user_name);
+		if (!dest)
 		{
-			case 'i':
-				channel->mode(Channel::INV_ONLY);
-				break ;
-			case 't':
-				channel->mode(Channel::REST_TOPIC);
-				break ;
-			case 'k':
-				channel->mode(Channel::PRIVATE_KEY);
-				break ;
-			case 'o':
-				channel->mode(Channel::OPER_PRIVILEGE);
-				break ;
-			case 'l':
-				channel->mode(Channel::USER_LIMIT);
-				break ;
+			user->reply(ERR_NOSUCHNICK(user->getNickName(), _user_name));
+			return;
 		}
-		++i;
+
+		if (!dest->getChannel() || dest->getChannel() != channel)
+		{
+			user->reply(ERR_USERNOTINCHANNEL(user->getNickName(), dest->getNickName(), _user_name));
+			return;
+		}
 	}
+
+	if (args.size() == 3 && args[1][1] == 'l')
+	{
+		int	pass = 0;
+		std::istringstream(args[2]) >> pass;
+		if (pass > 0 && pass < MAX_LIMIT)
+			_limit = pass;
+	}
+
+
+	// if (args[1][0] == '+')
+	// {
+	// 	int i = 0;
+	// 	while(flags[i])
+	// 	{
+	// 		switch (flags[i])
+	// 		{
+	// 			case 'i':
+	// 				channel->mode(Channel::INV_ONLY);
+	// 				break ;
+	// 			case 't':
+	// 				channel->mode(Channel::REST_TOPIC);
+	// 				break ;
+	// 			case 'k':
+	// 				channel->mode(Channel::PRIVATE_KEY);
+	// 				break ;
+	// 			case 'o':
+	// 				channel->mode(Channel::OPER_PRIVILEGE);
+	// 				break ;
+	// 			case 'l':
+	// 				channel->mode(Channel::USER_LIMIT);
+	// 				break ;
+	// 		}
+	// 		++i;
+	// 	} 
+	// }
+	if (args[1][0] == '+')
+	{
+		if (flags[0] == 'i')
+			channel->mode(Channel::INV_ONLY);
+		else if (flags[0] == 't')
+			channel->mode(Channel::REST_TOPIC);
+		else if (flags[0] == 'k')
+		{
+			channel->mode(Channel::PRIVATE_KEY);
+			channel->setKey(args[2]);
+		}
+		else if (flags[0] == 'o')
+		{
+			channel->mode(Channel::OPER_PRIVILEGE);
+			channel->giveOperator(dest);
+		}
+		else if (flags[0] == 'l')
+		{
+			channel->mode(Channel::USER_LIMIT);
+			channel->setLimit(_limit);
+		}
+	}
+	else if (args[1][0] == '-')
+	{
+		if (flags[0] == 'i')
+		{
+			// 	channel->removeInvMode();
+		}
+		else if (flags[0] == 't')
+			channel->removeTopic();
+		else if (flags[0] == 'k')
+			channel->removeKey();
+		else if (flags[0] == 'o')
+			channel->takeOperator(dest);
+		else if (flags[0] == 'l')
+			channel->removeLimit();
+	} 
+
 }
