@@ -129,7 +129,7 @@ namespace irc
 		
 		private:
 			std::string _user_name;
-			size_t			_limit;
+			// size_t			_limit;
 
 			virtual void	execute(User* user, const std::vector<std::string>& args);
 	};
