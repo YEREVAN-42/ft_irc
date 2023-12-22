@@ -14,7 +14,7 @@ irc::Invite::~Invite(){}
 
 void	irc::Invite::execute(User* user, const std::vector<std::string>& args)
 {
-	if (args.empty())
+	if (args.size() != 2)
     {
         user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "INVITE"));
         return;
@@ -29,11 +29,18 @@ void	irc::Invite::execute(User* user, const std::vector<std::string>& args)
         user->reply(ERR_NOTONCHANNEL(user->getNickName(), channel_name));
         return;
     }
-	if (channel->getAdmin() != user)
+
+	if (channel->getAdmin() != user && user->getPrivilege() == false)
     {
         user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
         return;
     }
+
+    if (channel->getLimit() > 0 && channel->getSize() == channel->getLimit())
+    {
+		user->reply(ERR_CHANNELISFULL(user->getNickName(), user_name));
+		return;
+	}
 
 	User *dest = _server->getUser(user_name);
     if (!dest)

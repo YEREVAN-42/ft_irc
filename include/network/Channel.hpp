@@ -38,7 +38,7 @@ namespace irc
             void    setKey(const std::string&);
             void    setLimit(size_t);
             void    setExtMsg(bool);
-            void    setModeString(const std::string&);
+            void    setModeChar(const char);
             void    setTopic(const std::string&);
             void    reSetTopic(const std::string&);
 

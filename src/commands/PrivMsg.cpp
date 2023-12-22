@@ -8,9 +8,9 @@ irc::PrivMsg::~PrivMsg() { }
 void	irc::PrivMsg::execute(User* user, const std::vector<std::string>& args)
 {
 	if (args.size() < 2 || args[0].empty() || args[1].empty())
-    {
-        user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "PRIVMSG"));
-        return;
+  {
+		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "PRIVMSG"));
+		return;
 	}
 	std::string receiver = args.at(0);
 	std::string message = "";
@@ -37,7 +37,7 @@ void	irc::PrivMsg::execute(User* user, const std::vector<std::string>& args)
 			return;
 		}
 		
-		if (!channel->getExtMsg())
+		if (!channel->getExtMsg() && channel->getAdmin() != user)
 		{
 			std::vector<std::string> nicknames = channel->getNickNames();
 
@@ -57,8 +57,8 @@ void	irc::PrivMsg::execute(User* user, const std::vector<std::string>& args)
 				return;
 			}
 		}
-			channel->broadcast(RPL_PRIVMSG(user->getPrefix(), receiver, message), user->getNickName());
-    	return;
+		channel->broadcast(RPL_PRIVMSG(user->getPrefix(), receiver, message), user->getNickName());
+    return;
 	}
 	
 	User  *dest = _server->getUser(receiver);

@@ -18,6 +18,7 @@ void	irc::Kick::execute(User* user, const std::vector<std::string>& args)
 	if (args.size() < 2)
 	{
 		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "KICK"));
+		return ;
 	}
 
 	std::string channel_name = args[0];
