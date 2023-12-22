@@ -63,8 +63,8 @@ void	irc::Notice::execute(User* user, const std::vector<std::string>& args)
 	User  *dest = _server->getUser(channel_name);
     if (!dest)
     {
-        user->reply(ERR_NOSUCHNICK(user->getNickName(), channel_name));
-		return;
+      user->reply(ERR_NOSUCHNICK(user->getNickName(), channel_name));
+			return;
     }
 
     dest->write(RPL_PRIVMSG(user->getPrefix(), channel_name, message));

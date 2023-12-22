@@ -138,6 +138,7 @@ void	irc::User::welcome()
  */
 void	irc::User::join(Channel* channel)
 {
+	channel->setModeChar('o');
 	channel->addUser(this);
 	_channel = channel;
 

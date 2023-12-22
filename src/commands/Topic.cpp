@@ -17,6 +17,7 @@ void	irc::Topic::execute(User* user, const std::vector<std::string>& args)
 	if (args.size() < 2)
 	{
 		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "TOPIC"));
+		return ;
 	}
 
 	std::string channel_name = args[0];
@@ -31,7 +32,7 @@ void	irc::Topic::execute(User* user, const std::vector<std::string>& args)
     return;
   }
 
-	if (channel->getAdmin() != user)
+	if (channel->getAdmin() != user && user->getPrivilege() == false)
   {
       user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
       return;

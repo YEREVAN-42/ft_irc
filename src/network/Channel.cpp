@@ -274,9 +274,9 @@ void    irc::Channel::broadcast(const std::string& mes, const std::string& userN
  * 
  * @return nothing
  */
-void    irc::Channel::setModeString(const std::string& m)
+void    irc::Channel::setModeChar(const char m)
 {
-    switch(m[0])
+    switch(m)
     {
         case 'i':
          _modes |= INV_ONLY;

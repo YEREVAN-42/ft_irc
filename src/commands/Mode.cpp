@@ -22,7 +22,7 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		return;
 	}
 
-	if (channel->getAdmin() != user)
+	if (channel->getAdmin() != user && user->getPrivilege() == false)
 	{
 		user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
 		return;
@@ -38,32 +38,88 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		return ;
 	}
 
-	const char mode = args[1][0];
-	const char flag = args[1][1];
+	const char mode          = args[1][0];
+	const char flag          = args[1][1];
 
 	//stexic heto petq a stugel ka errord argument te che u ete ka vor flagi het a vorovhetev kaxvac dranic tarber baner petq a ani
 	//orinak senc------ MODE #Finnish +o Kilroy(es depqum petq a es Kilroy-in admini privilegia ta, minusi depqum el de hakaraky)
 	//kam senc------ MODE #eu-opers +l 10(es depqum vonc haskanum em petq a limity darcni 10)
 	//kam daje senc------ MODE #42 +k oulu(es depqum el channel-i passwordy darcni oulu)
 
+	User* _user = NULL;
+
 	if (mode == '+')
 	{
 		switch (flag)
 		{
 			case 'i':
+				if (args.size() != 2)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
 				channel->mode(Channel::INV_ONLY);
 				break ;
 			case 't':
+				if (args.size() != 2)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
 				channel->mode(Channel::REST_TOPIC);
 				break ;
 			case 'k':
+				if (args.size() != 3)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
 				channel->mode(Channel::PRIVATE_KEY);
+				channel->setKey(args[2]);
 				break ;
 			case 'o':
+				if (args.size() != 3)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
+				_user = _server->getUser(args[2]);
+
+				if (!_user)
+				{
+					user->reply(ERR_NOSUCHNICK(user->getNickName(), args[2]));
+					return;
+				}
+
+				if (!_user->getChannel() || _user->getChannel() != channel)
+				{
+					user->reply(ERR_USERNOTINCHANNEL(user->getNickName(), _user->getNickName(), args[2]));
+					return;
+				}
+
 				channel->mode(Channel::OPER_PRIVILEGE);
+				channel->giveOperator(_user);
 				break ;
 			case 'l':
+				if (args.size() != 3)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
+				if ((args[2].find_first_not_of("1234567890") != std::string::npos)\
+						|| (std::atoi(args[2].c_str()) > MAX_LIMIT) || (std::atoi(args[2].c_str()) == 0))
+				{
+					user->reply("Please input a valid limit for channel.\n It must be a number in the range (0, 65535].");
+					return ;
+				}
+				size_t _limit = std::atoi(args[2].c_str());
 				channel->mode(Channel::USER_LIMIT);
+				channel->setLimit(_limit);
 				break ;
 		}
 	}
@@ -89,52 +145,4 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		}
 	}
 
-	// User *dest;
-	// if (args.size() == 3 && args[1][1] == 'o')
-	// {
-	// 	_user_name = args[2];
-
-	// 	dest = _server->getUser(_user_name);
-	// 	if (!dest)
-	// 	{
-	// 		user->reply(ERR_NOSUCHNICK(user->getNickName(), _user_name));
-	// 		return;
-	// 	}
-
-	// 	if (!dest->getChannel() || dest->getChannel() != channel)
-	// 	{
-	// 		user->reply(ERR_USERNOTINCHANNEL(user->getNickName(), dest->getNickName(), _user_name));
-	// 		return;
-	// 	}
-	// }
-
-	// if (args.size() == 3 && args[1][1] == 'l')
-	// {
-	// 	int	pass = 0;
-	// 	std::istringstream(args[2]) >> pass;
-	// 	if (pass > 0 && pass < MAX_LIMIT)
-	// 		_limit = pass;
-	// }
-	// if (args[1][0] == '+')
-	// {
-	// 	if (flags[0] == 'i')
-	// 		channel->mode(Channel::INV_ONLY);
-	// 	else if (flags[0] == 't')
-	// 		channel->mode(Channel::REST_TOPIC);
-	// 	else if (flags[0] == 'k')
-	// 	{
-	// 		channel->mode(Channel::PRIVATE_KEY);
-	// 		channel->setKey(args[2]);
-	// 	}
-	// 	else if (flags[0] == 'o')
-	// 	{
-	// 		channel->mode(Channel::OPER_PRIVILEGE);
-	// 		channel->giveOperator(dest);
-	// 	}
-	// 	else if (flags[0] == 'l')
-	// 	{
-	// 		channel->mode(Channel::USER_LIMIT);
-	// 		channel->setLimit(_limit);
-	// 	}
-	// }
 }
