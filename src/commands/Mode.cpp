@@ -24,14 +24,14 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 
 	if (!channel)
 	{
-    user->reply(ERR_NOSUCHCHANNEL(user->getNickName(), channel_name));
-    return;
+		user->reply(ERR_NOSUCHCHANNEL(user->getNickName(), channel_name));
+		return;
 	}
 
 	if (channel->getAdmin() != user)
 	{
-    user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
-    return;
+		user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
+		return;
 	}
 
 	
@@ -53,75 +53,97 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 	//stexic heto petq a stugel ka errord argument te che u ete ka vor flagi het a vorovhetev kaxvac dranic tarber baner petq a ani
 	//orinak senc------ MODE #Finnish +o Kilroy(es depqum petq a es Kilroy-in admini privilegia ta, minusi depqum el de hakaraky)
 	//kam senc------ MODE #eu-opers +l 10(es depqum vonc haskanum em petq a limity darcni 10)
-	//kam daje senc------ MODE #42 +k oulu(es depqum el channel-i passwordy darncni oulu)
-	// std::string	user_name;
-	// if (args.size() == 3)
-	// 	user_name = args[2];
+	//kam daje senc------ MODE #42 +k oulu(es depqum el channel-i passwordy darcni oulu)
+	User *dest;
+	if (args.size() == 3 && args[1][1] == 'o')
+	{
+		_user_name = args[2];
 
-	// User *dest = _server->getUser(user_name);
-    // if (!dest)
-    // {
-    //     user->reply(ERR_NOSUCHNICK(user->getNickName(), user_name));
-    //     return;
-    // }
+		dest = _server->getUser(_user_name);
+		if (!dest)
+		{
+			user->reply(ERR_NOSUCHNICK(user->getNickName(), _user_name));
+			return;
+		}
 
-    // if (!dest->getChannel() || dest->getChannel() != channel)
-    // {
-    //     user->reply(ERR_USERNOTINCHANNEL(user->getNickName(), dest->getNickName(), user_name));
-    //     return;
-    // }
+		if (!dest->getChannel() || dest->getChannel() != channel)
+		{
+			user->reply(ERR_USERNOTINCHANNEL(user->getNickName(), dest->getNickName(), _user_name));
+			return;
+		}
+	}
 
+	if (args.size() == 3 && args[1][1] == 'l')
+	{
+		int	pass = 0;
+		std::istringstream(args[2]) >> pass;
+		if (pass > 0 && pass < MAX_LIMIT)
+			_limit = pass;
+	}
+
+
+	// if (args[1][0] == '+')
+	// {
+	// 	int i = 0;
+	// 	while(flags[i])
+	// 	{
+	// 		switch (flags[i])
+	// 		{
+	// 			case 'i':
+	// 				channel->mode(Channel::INV_ONLY);
+	// 				break ;
+	// 			case 't':
+	// 				channel->mode(Channel::REST_TOPIC);
+	// 				break ;
+	// 			case 'k':
+	// 				channel->mode(Channel::PRIVATE_KEY);
+	// 				break ;
+	// 			case 'o':
+	// 				channel->mode(Channel::OPER_PRIVILEGE);
+	// 				break ;
+	// 			case 'l':
+	// 				channel->mode(Channel::USER_LIMIT);
+	// 				break ;
+	// 		}
+	// 		++i;
+	// 	} 
+	// }
 	if (args[1][0] == '+')
 	{
-		int i = 0;
-		while(flags[i])
+		if (flags[0] == 'i')
+			channel->mode(Channel::INV_ONLY);
+		else if (flags[0] == 't')
+			channel->mode(Channel::REST_TOPIC);
+		else if (flags[0] == 'k')
 		{
-			std::cout << flags[i] << std::endl;
-			switch (flags[i])
-			{
-				case 'i':
-					channel->mode(Channel::INV_ONLY);
-					break ;
-				case 't':
-					channel->mode(Channel::REST_TOPIC);
-					break ;
-				case 'k':
-					channel->mode(Channel::PRIVATE_KEY);
-					break ;
-				case 'o':
-					channel->mode(Channel::OPER_PRIVILEGE);
-					break ;
-				case 'l':
-					channel->mode(Channel::USER_LIMIT);
-					break ;
-			}
-			++i;
-		} 
+			channel->mode(Channel::PRIVATE_KEY);
+			channel->setKey(args[2]);
+		}
+		else if (flags[0] == 'o')
+		{
+			channel->mode(Channel::OPER_PRIVILEGE);
+			channel->giveOperator(dest);
+		}
+		else if (flags[0] == 'l')
+		{
+			channel->mode(Channel::USER_LIMIT);
+			channel->setLimit(_limit);
+		}
 	}
 	else if (args[1][0] == '-')
 	{
-		int i = 0;
-		while(flags[i])
+		if (flags[0] == 'i')
 		{
-			switch (flags[i])
-			{
-				// case 'i':
-				// 	channel->removeInvMode();
-				// 	break ;
-				case 't':
-					channel->removeTopic();
-					break ;
-				case 'k':
-					channel->removeKey();
-					break ;
-				case 'o':
-					channel->takeOperator(user);
-					break ;
-				case 'l':
-					channel->removeLimit();
-					break ;
-			}
-			++i;
-		} 
-	}
+			// 	channel->removeInvMode();
+		}
+		else if (flags[0] == 't')
+			channel->removeTopic();
+		else if (flags[0] == 'k')
+			channel->removeKey();
+		else if (flags[0] == 'o')
+			channel->takeOperator(dest);
+		else if (flags[0] == 'l')
+			channel->removeLimit();
+	} 
+
 }

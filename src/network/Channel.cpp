@@ -51,7 +51,7 @@ void irc::Channel::removeLimit()
 
 void    irc::Channel::setKey(const std::string& key)
 {
-    std::string message = NULL;
+    std::string message = "";
     if (_modes & PRIVATE_KEY)
     {
         _key = key;
@@ -64,7 +64,7 @@ void    irc::Channel::setKey(const std::string& key)
 
 void irc::Channel::removeKey()
 {
-  std::string message = NULL;
+  std::string message = "";
    if (_modes & PRIVATE_KEY)
     {
         _key.clear();
