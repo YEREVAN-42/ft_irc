@@ -51,7 +51,7 @@ void irc::Channel::removeLimit()
 
 void    irc::Channel::setKey(const std::string& key)
 {
-    std::string message = NULL;
+    std::string message = "";
     if (_modes & PRIVATE_KEY)
     {
         _key = key;
@@ -64,7 +64,7 @@ void    irc::Channel::setKey(const std::string& key)
 
 void irc::Channel::removeKey()
 {
-  std::string message = NULL;
+  std::string message = "";
    if (_modes & PRIVATE_KEY)
     {
         _key.clear();
@@ -305,14 +305,14 @@ void    irc::Channel::invite(irc::User* user)
 
 void    irc::Channel::mode(ChannelMode_t m)
 {
-    if (m & INV_ONLY)
-        _modes |= INV_ONLY;
-    if (m & REST_TOPIC)
-        _modes |= REST_TOPIC;
-    if (m & PRIVATE_KEY)
-        _modes |= PRIVATE_KEY;
-    if (m & OPER_PRIVILEGE)
-        _modes |= OPER_PRIVILEGE;
-    if (m & USER_LIMIT)
-        _modes |= USER_LIMIT;
+	if (m & INV_ONLY)
+		_modes |= INV_ONLY;
+	if (m & REST_TOPIC)
+		_modes |= REST_TOPIC;
+	if (m & PRIVATE_KEY)
+		_modes |= PRIVATE_KEY;
+	if (m & OPER_PRIVILEGE)
+		_modes |= OPER_PRIVILEGE;
+	if (m & USER_LIMIT)
+		_modes |= USER_LIMIT;
 }
