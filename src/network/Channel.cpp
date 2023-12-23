@@ -107,6 +107,11 @@ void irc::Channel::removeInvMode()
     _modes ^= INV_ONLY;
 }
 
+void irc::Channel::removeOperatorMode()
+{
+    _modes ^= OPER_PRIVILEGE;
+}
+
 void irc::Channel::removeTopicMode()
 {
     _modes ^= REST_TOPIC;

@@ -41,11 +41,6 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 	const char mode          = args[1][0];
 	const char flag          = args[1][1];
 
-	//stexic heto petq a stugel ka errord argument te che u ete ka vor flagi het a vorovhetev kaxvac dranic tarber baner petq a ani
-	//orinak senc------ MODE #Finnish +o Kilroy(es depqum petq a es Kilroy-in admini privilegia ta, minusi depqum el de hakaraky)
-	//kam senc------ MODE #eu-opers +l 10(es depqum vonc haskanum em petq a limity darcni 10)
-	//kam daje senc------ MODE #42 +k oulu(es depqum el channel-i passwordy darcni oulu)
-
 	User* _user = NULL;
 
 	if (mode == '+')
@@ -128,18 +123,76 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		switch (flag)
 		{
 			case 'i':
+				if (args.size() != 2)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
 				channel->removeInvMode();
 				break ;
 			case 't':
+				if (args.size() != 2)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
 				channel->removeTopicMode();
 				break ;
 			case 'k':
+				if (args.size() != 2)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
+				channel->setKey("");
 				channel->removeKeyMode();
 				break ;
 			case 'o':
-				// channel->takeOperator(dest);
+				if (args.size() != 3)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+
+				_user = _server->getUser(args[2]);
+
+				if (!_user)
+				{
+					user->reply(ERR_NOSUCHNICK(user->getNickName(), args[2]));
+					return;
+				}
+
+				if (!_user->getChannel() || _user->getChannel() != channel)
+				{
+					user->reply(ERR_USERNOTINCHANNEL(user->getNickName(), _user->getNickName(), args[2]));
+					return;
+				}
+
+				if (_user == channel->getAdmin())
+				{
+					user->reply("The user you specified is an admin");
+					return;
+				}
+
+				if (_user->getPrivilege() == false)
+				{
+					user->reply("The user you specified does not have admin privileges");
+					return;
+				}
+
+				channel->takeOperator(_user);
+				channel->removeOperatorMode();
 				break ;
 			case 'l':
+				if (args.size() != 2)
+				{
+					user->reply("Wrong count of parameters.");
+					return ;
+				}
+				channel->removeLimit();
 				channel->removeLimitMode();
 				break ;
 		}
