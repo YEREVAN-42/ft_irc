@@ -165,8 +165,6 @@ void    irc::Channel::kick(irc::User* user, irc::User* target, const std::string
  */
 void    irc::Channel::addUser(irc::User* puser)
 {
-    if (_modes & INV_ONLY)
-        return ;
     if (_userVector.empty())
         giveOperator(puser);
     _userVector.push_back(puser);

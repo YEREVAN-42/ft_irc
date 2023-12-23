@@ -46,7 +46,7 @@ void	irc::Kick::execute(User* user, const std::vector<std::string>& args)
         return;
     }
 
-	if (channel->getAdmin() != user)
+	if (channel->getAdmin() != user && user->getPrivilege() == false)
     {
         user->reply(ERR_CHANOPRIVSNEEDED(user->getNickName(), channel_name));
         return;
