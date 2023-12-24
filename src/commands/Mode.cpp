@@ -12,6 +12,12 @@ void	irc::Mode::execute(User* user, const std::vector<std::string>& args)
 		return;
 	}
 
+	if (user->isRegistered() == false)
+	{
+		user->reply(ERR_NOTREGISTERED("Current user"));
+		return;
+	}
+
 	std::string	channel_name = args[0];
 
 	Channel* channel = _server->getChannel(channel_name);

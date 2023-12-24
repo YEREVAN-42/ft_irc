@@ -22,6 +22,12 @@ void    irc::Join::execute(User* user, const std::vector<std::string>& args)
 		return;
 	}
 
+	if (user->isRegistered() == false)
+	{
+		user->reply(ERR_NOTREGISTERED("Current user"));
+		return;
+	}
+
 	std::string user_name = args[0];
 	std::string pass;
 	if (args.size() > 1)
