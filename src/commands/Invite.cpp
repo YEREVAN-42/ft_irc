@@ -19,6 +19,12 @@ void	irc::Invite::execute(User* user, const std::vector<std::string>& args)
         user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "INVITE"));
         return;
     }
+ 
+    if (user->isRegistered() == false)
+	{
+		user->reply(ERR_NOTREGISTERED("Current user"));
+		return;
+	}
 
 	std::string user_name = args[0];
 	std::string channel_name = args[1];

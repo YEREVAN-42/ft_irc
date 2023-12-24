@@ -21,6 +21,12 @@ void	irc::Kick::execute(User* user, const std::vector<std::string>& args)
 		return ;
 	}
 
+	if (user->isRegistered() == false)
+	{
+		user->reply(ERR_NOTREGISTERED("Current user"));
+		return;
+	}
+
 	std::string channel_name = args[0];
 	std::string user_name = args[1];
 	std::string reason = "No reason specified!";

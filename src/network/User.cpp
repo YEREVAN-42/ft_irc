@@ -2,7 +2,7 @@
 
 irc::User::~User() {	}
 irc::User::User(int fd, int port, const std::string& host)
-	: _fd(fd), _port(port), _hostName(host), _privilege(false), _channel(NULL)
+	: _fd(fd), _port(port), _hostName(host), _privilege(false), _channel(NULL), _state(HANDSHAKE)
 {	}
 
 int	irc::User::getFd()   const { return _fd; }
