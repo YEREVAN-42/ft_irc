@@ -12,6 +12,13 @@ void	irc::PrivMsg::execute(User* user, const std::vector<std::string>& args)
 		user->reply(ERR_NEEDMOREPARAMS(user->getNickName(), "PRIVMSG"));
 		return;
 	}
+
+	if (user->isRegistered() == false)
+	{
+		user->reply(ERR_NOTREGISTERED("Current user"));
+		return;
+	}
+
 	std::string receiver = args.at(0);
 	std::string message = "";
 
